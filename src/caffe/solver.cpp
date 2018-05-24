@@ -241,11 +241,66 @@ void Solver<Dtype>::Step(int iters) {
             loss_msg_stream << " (* " << loss_weight
                             << " = " << loss_weight * result_vec[k] << " loss)";
           }
-          LOG_IF(INFO, Caffe::root_solver()) << "    Train net output #"
+          LOG_IF(INFO, Caffe::root_solver()) << "    Train net output ###"
               << score_index++ << ": " << output_name << " = "
               << result_vec[k] << loss_msg_stream.str();
         }
       }
+
+      // add by Zzp
+      // output data and gradient info
+      int max_len = 0;
+      for (int l = 0; l < net_->layers().size(); ++l) {
+        Layer<Dtype>& layer = *net_->layers()[l].get();
+        if (layer.layer_param().name().length()
+            > max_len)
+          max_len = layer.layer_param().name().length();
+      }
+
+      // bottom blobs and their gradient
+      const vector<vector<Blob<Dtype>*> >& bottom_vecs = net_->bottom_vecs();
+      for (int l = 0; l < net_->layers().size(); ++l) {
+        Layer<Dtype>& layer = *net_->layers()[l].get();
+        for (int b=0; b<bottom_vecs[l].size(); ++b) {
+          const Blob<Dtype>* blob = bottom_vecs[l][b];
+          Dtype data_sum = 0;
+          Dtype diff_sum = 0;
+          data_sum = blob->asum_data();
+          diff_sum = blob->asum_diff();
+          data_sum /= blob->count();
+          diff_sum /= blob->count();
+          LOG_IF(INFO, Caffe::root_solver()) << std::left << std::setw(max_len + 1) << std::setfill(' ')
+                    << layer.layer_param().name()
+                    << " bottom_blob " << b << ": " << std::scientific
+                    << data_sum << " [" << diff_sum << "]";
+        }
+      }
+
+      LOG(INFO) << std::endl;
+
+      // output learnable weights and their gradients
+      for (int l = 0; l < net_->layers().size(); ++l) {
+        Layer<Dtype>& layer = *net_->layers()[l].get();
+        for (int bp = 0; bp < layer.blobs().size(); ++bp) {
+          Blob<Dtype>& para_blob = *layer.blobs()[bp].get();
+          const Dtype* para_blob_cpu_data = para_blob.cpu_data();
+          const Dtype* para_blob_cpu_diff = para_blob.cpu_diff();
+          Dtype para_data_sum = 0;
+          Dtype para_diff_sum = 0;
+          for (int i = 0; i < para_blob.count(); ++i) {
+            para_data_sum += (para_blob_cpu_data[i] > Dtype(0.)) ? para_blob_cpu_data[i]
+                : - para_blob_cpu_data[i];
+            para_diff_sum += (para_blob_cpu_diff[i] > Dtype(0.)) ? para_blob_cpu_diff[i]
+                : - para_blob_cpu_diff[i];
+          }
+          para_data_sum /= para_blob.count();
+          para_diff_sum /= para_blob.count();
+          LOG_IF(INFO, Caffe::root_solver()) << std::left << std::setw(max_len + 1) << std::setfill(' ')
+                    << layer.layer_param().name()
+                    << " param_blob " << bp << ": " << std::scientific
+                   << para_data_sum << " [" << para_diff_sum << "]";
+        }
+      } // end add by Zzp
     }
     for (int i = 0; i < callbacks_.size(); ++i) {
       callbacks_[i]->on_gradients_ready();
