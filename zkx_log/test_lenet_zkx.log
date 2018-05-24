@@ -1,0 +1,894 @@
+I0921 21:41:09.584179  8871 caffe.cpp:246] Use CPU.
+I0921 21:41:09.725095  8871 net.cpp:313] The NetState phase (1) differed from the phase (0) specified by a rule in layer mnist
+I0921 21:41:09.725234  8871 net.cpp:49] Initializing net from parameters: 
+name: "LeNet"
+state {
+  phase: TEST
+}
+layer {
+  name: "mnist"
+  type: "Data"
+  top: "data"
+  top: "label"
+  include {
+    phase: TEST
+  }
+  transform_param {
+    scale: 0.00390625
+  }
+  data_param {
+    source: "examples/mnist/mnist_test_lmdb"
+    batch_size: 100
+    backend: LMDB
+  }
+}
+layer {
+  name: "conv1"
+  type: "Convolution"
+  bottom: "data"
+  top: "conv1"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  convolution_param {
+    num_output: 20
+    kernel_size: 5
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "pool1"
+  type: "Pooling"
+  bottom: "conv1"
+  top: "pool1"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+layer {
+  name: "conv2"
+  type: "Convolution"
+  bottom: "pool1"
+  top: "conv2"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  convolution_param {
+    num_output: 50
+    kernel_size: 5
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "pool2"
+  type: "Pooling"
+  bottom: "conv2"
+  top: "pool2"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+layer {
+  name: "ip1"
+  type: "InnerProduct"
+  bottom: "pool2"
+  top: "ip1"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  inner_product_param {
+    num_output: 500
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "relu1"
+  type: "ReLU"
+  bottom: "ip1"
+  top: "ip1"
+}
+layer {
+  name: "ip2"
+  type: "InnerProduct"
+  bottom: "ip1"
+  top: "ip2"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  inner_product_param {
+    num_output: 10
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "accuracy"
+  type: "Accuracy"
+  bottom: "ip2"
+  bottom: "label"
+  top: "accuracy"
+  include {
+    phase: TEST
+  }
+}
+layer {
+  name: "loss"
+  type: "SoftmaxWithLoss"
+  bottom: "ip2"
+  bottom: "label"
+  top: "loss"
+}
+I0921 21:41:09.725553  8871 layer_factory.hpp:77] Creating layer mnist
+I0921 21:41:09.726378  8871 net.cpp:91] Creating Layer mnist
+I0921 21:41:09.726398  8871 net.cpp:399] mnist -> data
+I0921 21:41:09.726501  8871 net.cpp:399] mnist -> label
+I0921 21:41:09.726929  8876 db_lmdb.cpp:35] Opened lmdb examples/mnist/mnist_test_lmdb
+I0921 21:41:09.727035  8871 data_layer.cpp:41] output data size: 100,1,28,28
+I0921 21:41:09.727301  8871 base_data_layer.cpp:69] Initializing prefetch
+I0921 21:41:09.727337  8871 base_data_layer.cpp:72] Prefetch initialized.
+I0921 21:41:09.727346  8871 net.cpp:141] Setting up mnist
+I0921 21:41:09.727377  8871 net.cpp:148] Top shape: 100 1 28 28 (78400)
+I0921 21:41:09.727387  8871 net.cpp:148] Top shape: 100 (100)
+I0921 21:41:09.727391  8871 net.cpp:156] Memory required for data: 314000
+I0921 21:41:09.727404  8871 layer_factory.hpp:77] Creating layer label_mnist_1_split
+I0921 21:41:09.727442  8871 net.cpp:91] Creating Layer label_mnist_1_split
+I0921 21:41:09.727455  8871 net.cpp:425] label_mnist_1_split <- label
+I0921 21:41:09.727504  8871 net.cpp:399] label_mnist_1_split -> label_mnist_1_split_0
+I0921 21:41:09.727545  8871 net.cpp:399] label_mnist_1_split -> label_mnist_1_split_1
+I0921 21:41:09.727587  8871 net.cpp:141] Setting up label_mnist_1_split
+I0921 21:41:09.727599  8871 net.cpp:148] Top shape: 100 (100)
+I0921 21:41:09.727610  8871 net.cpp:148] Top shape: 100 (100)
+I0921 21:41:09.727625  8871 net.cpp:156] Memory required for data: 314800
+I0921 21:41:09.727632  8871 layer_factory.hpp:77] Creating layer conv1
+I0921 21:41:09.727665  8871 net.cpp:91] Creating Layer conv1
+I0921 21:41:09.727674  8871 net.cpp:425] conv1 <- data
+I0921 21:41:09.727697  8871 net.cpp:399] conv1 -> conv1
+I0921 21:41:09.728904  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:09.728919  8877 data_layer.cpp:103]      Read time: 0.097 ms.
+I0921 21:41:09.728934  8877 data_layer.cpp:104] Transform time: 0.592 ms.
+I0921 21:41:09.729853  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:09.729859  8877 data_layer.cpp:103]      Read time: 0.085 ms.
+I0921 21:41:09.729862  8877 data_layer.cpp:104] Transform time: 0.582 ms.
+I0921 21:41:09.730765  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:09.730770  8877 data_layer.cpp:103]      Read time: 0.086 ms.
+I0921 21:41:09.730783  8877 data_layer.cpp:104] Transform time: 0.57 ms.
+I0921 21:41:09.858350  8871 cudnn_conv_layer.cpp:194] Reallocating workspace storage: 20664
+I0921 21:41:09.858383  8871 net.cpp:141] Setting up conv1
+I0921 21:41:09.858398  8871 net.cpp:148] Top shape: 100 20 24 24 (1152000)
+I0921 21:41:09.858412  8871 net.cpp:156] Memory required for data: 4922800
+I0921 21:41:09.858510  8871 layer_factory.hpp:77] Creating layer pool1
+I0921 21:41:09.858554  8871 net.cpp:91] Creating Layer pool1
+I0921 21:41:09.858564  8871 net.cpp:425] pool1 <- conv1
+I0921 21:41:09.858583  8871 net.cpp:399] pool1 -> pool1
+I0921 21:41:09.858639  8871 net.cpp:141] Setting up pool1
+I0921 21:41:09.858656  8871 net.cpp:148] Top shape: 100 20 12 12 (288000)
+I0921 21:41:09.858659  8871 net.cpp:156] Memory required for data: 6074800
+I0921 21:41:09.858664  8871 layer_factory.hpp:77] Creating layer conv2
+I0921 21:41:09.858721  8871 net.cpp:91] Creating Layer conv2
+I0921 21:41:09.858727  8871 net.cpp:425] conv2 <- pool1
+I0921 21:41:09.858741  8871 net.cpp:399] conv2 -> conv2
+I0921 21:41:09.860155  8871 cudnn_conv_layer.cpp:194] Reallocating workspace storage: 10272
+I0921 21:41:09.860266  8871 net.cpp:141] Setting up conv2
+I0921 21:41:09.860276  8871 net.cpp:148] Top shape: 100 50 8 8 (320000)
+I0921 21:41:09.860280  8871 net.cpp:156] Memory required for data: 7354800
+I0921 21:41:09.860304  8871 layer_factory.hpp:77] Creating layer pool2
+I0921 21:41:09.860317  8871 net.cpp:91] Creating Layer pool2
+I0921 21:41:09.860323  8871 net.cpp:425] pool2 <- conv2
+I0921 21:41:09.860334  8871 net.cpp:399] pool2 -> pool2
+I0921 21:41:09.860354  8871 net.cpp:141] Setting up pool2
+I0921 21:41:09.860363  8871 net.cpp:148] Top shape: 100 50 4 4 (80000)
+I0921 21:41:09.860365  8871 net.cpp:156] Memory required for data: 7674800
+I0921 21:41:09.860369  8871 layer_factory.hpp:77] Creating layer ip1
+I0921 21:41:09.860385  8871 net.cpp:91] Creating Layer ip1
+I0921 21:41:09.860400  8871 net.cpp:425] ip1 <- pool2
+I0921 21:41:09.860424  8871 net.cpp:399] ip1 -> ip1
+I0921 21:41:09.876507  8871 net.cpp:141] Setting up ip1
+I0921 21:41:09.876536  8871 net.cpp:148] Top shape: 100 500 (50000)
+I0921 21:41:09.876540  8871 net.cpp:156] Memory required for data: 7874800
+I0921 21:41:09.876572  8871 layer_factory.hpp:77] Creating layer relu1
+I0921 21:41:09.876595  8871 net.cpp:91] Creating Layer relu1
+I0921 21:41:09.876611  8871 net.cpp:425] relu1 <- ip1
+I0921 21:41:09.876631  8871 net.cpp:386] relu1 -> ip1 (in-place)
+I0921 21:41:09.876893  8871 net.cpp:141] Setting up relu1
+I0921 21:41:09.876902  8871 net.cpp:148] Top shape: 100 500 (50000)
+I0921 21:41:09.876915  8871 net.cpp:156] Memory required for data: 8074800
+I0921 21:41:09.876920  8871 layer_factory.hpp:77] Creating layer ip2
+I0921 21:41:09.876938  8871 net.cpp:91] Creating Layer ip2
+I0921 21:41:09.876945  8871 net.cpp:425] ip2 <- ip1
+I0921 21:41:09.876960  8871 net.cpp:399] ip2 -> ip2
+I0921 21:41:09.877193  8871 net.cpp:141] Setting up ip2
+I0921 21:41:09.877213  8871 net.cpp:148] Top shape: 100 10 (1000)
+I0921 21:41:09.877215  8871 net.cpp:156] Memory required for data: 8078800
+I0921 21:41:09.877223  8871 layer_factory.hpp:77] Creating layer ip2_ip2_0_split
+I0921 21:41:09.877233  8871 net.cpp:91] Creating Layer ip2_ip2_0_split
+I0921 21:41:09.877238  8871 net.cpp:425] ip2_ip2_0_split <- ip2
+I0921 21:41:09.877249  8871 net.cpp:399] ip2_ip2_0_split -> ip2_ip2_0_split_0
+I0921 21:41:09.877270  8871 net.cpp:399] ip2_ip2_0_split -> ip2_ip2_0_split_1
+I0921 21:41:09.877292  8871 net.cpp:141] Setting up ip2_ip2_0_split
+I0921 21:41:09.877300  8871 net.cpp:148] Top shape: 100 10 (1000)
+I0921 21:41:09.877316  8871 net.cpp:148] Top shape: 100 10 (1000)
+I0921 21:41:09.877320  8871 net.cpp:156] Memory required for data: 8086800
+I0921 21:41:09.877323  8871 layer_factory.hpp:77] Creating layer accuracy
+I0921 21:41:09.877336  8871 net.cpp:91] Creating Layer accuracy
+I0921 21:41:09.877342  8871 net.cpp:425] accuracy <- ip2_ip2_0_split_0
+I0921 21:41:09.877351  8871 net.cpp:425] accuracy <- label_mnist_1_split_0
+I0921 21:41:09.877362  8871 net.cpp:399] accuracy -> accuracy
+I0921 21:41:09.877377  8871 net.cpp:141] Setting up accuracy
+I0921 21:41:09.877384  8871 net.cpp:148] Top shape: (1)
+I0921 21:41:09.877388  8871 net.cpp:156] Memory required for data: 8086804
+I0921 21:41:09.877391  8871 layer_factory.hpp:77] Creating layer loss
+I0921 21:41:09.877403  8871 net.cpp:91] Creating Layer loss
+I0921 21:41:09.877408  8871 net.cpp:425] loss <- ip2_ip2_0_split_1
+I0921 21:41:09.877418  8871 net.cpp:425] loss <- label_mnist_1_split_1
+I0921 21:41:09.877426  8871 net.cpp:399] loss -> loss
+I0921 21:41:09.877442  8871 layer_factory.hpp:77] Creating layer loss
+I0921 21:41:09.877652  8871 net.cpp:141] Setting up loss
+I0921 21:41:09.877661  8871 net.cpp:148] Top shape: (1)
+I0921 21:41:09.877665  8871 net.cpp:151]     with loss weight 1
+I0921 21:41:09.877671  8871 net.cpp:156] Memory required for data: 8086808
+I0921 21:41:09.877676  8871 net.cpp:217] loss needs backward computation.
+I0921 21:41:09.877682  8871 net.cpp:219] accuracy does not need backward computation.
+I0921 21:41:09.877687  8871 net.cpp:217] ip2_ip2_0_split needs backward computation.
+I0921 21:41:09.877691  8871 net.cpp:217] ip2 needs backward computation.
+I0921 21:41:09.877696  8871 net.cpp:217] relu1 needs backward computation.
+I0921 21:41:09.877698  8871 net.cpp:217] ip1 needs backward computation.
+I0921 21:41:09.877702  8871 net.cpp:217] pool2 needs backward computation.
+I0921 21:41:09.877707  8871 net.cpp:217] conv2 needs backward computation.
+I0921 21:41:09.877712  8871 net.cpp:217] pool1 needs backward computation.
+I0921 21:41:09.877717  8871 net.cpp:217] conv1 needs backward computation.
+I0921 21:41:09.877722  8871 net.cpp:219] label_mnist_1_split does not need backward computation.
+I0921 21:41:09.877725  8871 net.cpp:219] mnist does not need backward computation.
+I0921 21:41:09.877732  8871 net.cpp:261] This network produces output accuracy
+I0921 21:41:09.877737  8871 net.cpp:261] This network produces output loss
+I0921 21:41:09.877753  8871 net.cpp:274] Network initialization done.
+I0921 21:41:09.886055  8871 net.cpp:755] Copying source layer mnist
+I0921 21:41:09.886081  8871 net.cpp:755] Copying source layer conv1
+I0921 21:41:09.886107  8871 net.cpp:755] Copying source layer pool1
+I0921 21:41:09.886111  8871 net.cpp:755] Copying source layer conv2
+I0921 21:41:09.886345  8871 net.cpp:755] Copying source layer pool2
+I0921 21:41:09.886349  8871 net.cpp:755] Copying source layer ip1
+I0921 21:41:09.889505  8871 net.cpp:755] Copying source layer relu1
+I0921 21:41:09.889515  8871 net.cpp:755] Copying source layer ip2
+I0921 21:41:09.889596  8871 net.cpp:755] Copying source layer loss
+I0921 21:41:09.889678  8871 caffe.cpp:252] Running for 100 iterations.
+I0921 21:41:09.889786  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:09.890877  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:09.890888  8877 data_layer.cpp:103]      Read time: 0.099 ms.
+I0921 21:41:09.890892  8877 data_layer.cpp:104] Transform time: 0.646 ms.
+I0921 21:41:10.299937  8871 caffe.cpp:275] Batch 0, accuracy = 1
+I0921 21:41:10.299970  8871 caffe.cpp:275] Batch 0, loss = 0.00846763
+I0921 21:41:10.300076  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:10.301090  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:10.301100  8877 data_layer.cpp:103]      Read time: 0.09 ms.
+I0921 21:41:10.301103  8877 data_layer.cpp:104] Transform time: 0.617 ms.
+I0921 21:41:10.379120  8871 caffe.cpp:275] Batch 1, accuracy = 1
+I0921 21:41:10.379148  8871 caffe.cpp:275] Batch 1, loss = 0.00712995
+I0921 21:41:10.379233  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:10.380296  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:10.380307  8877 data_layer.cpp:103]      Read time: 0.094 ms.
+I0921 21:41:10.380311  8877 data_layer.cpp:104] Transform time: 0.62 ms.
+I0921 21:41:10.459393  8871 caffe.cpp:275] Batch 2, accuracy = 0.99
+I0921 21:41:10.459420  8871 caffe.cpp:275] Batch 2, loss = 0.0253402
+I0921 21:41:10.459511  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:10.460536  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:10.460546  8877 data_layer.cpp:103]      Read time: 0.104 ms.
+I0921 21:41:10.460551  8877 data_layer.cpp:104] Transform time: 0.615 ms.
+I0921 21:41:10.539140  8871 caffe.cpp:275] Batch 3, accuracy = 0.99
+I0921 21:41:10.539167  8871 caffe.cpp:275] Batch 3, loss = 0.0299157
+I0921 21:41:10.539250  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:10.540276  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:10.540285  8877 data_layer.cpp:103]      Read time: 0.098 ms.
+I0921 21:41:10.540289  8877 data_layer.cpp:104] Transform time: 0.618 ms.
+I0921 21:41:10.619825  8871 caffe.cpp:275] Batch 4, accuracy = 0.98
+I0921 21:41:10.619856  8871 caffe.cpp:275] Batch 4, loss = 0.066058
+I0921 21:41:10.619936  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:10.620962  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:10.620973  8877 data_layer.cpp:103]      Read time: 0.09 ms.
+I0921 21:41:10.620977  8877 data_layer.cpp:104] Transform time: 0.619 ms.
+I0921 21:41:10.699515  8871 caffe.cpp:275] Batch 5, accuracy = 0.99
+I0921 21:41:10.699545  8871 caffe.cpp:275] Batch 5, loss = 0.07284
+I0921 21:41:10.699637  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:10.700664  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:10.700673  8877 data_layer.cpp:103]      Read time: 0.097 ms.
+I0921 21:41:10.700676  8877 data_layer.cpp:104] Transform time: 0.625 ms.
+I0921 21:41:10.780066  8871 caffe.cpp:275] Batch 6, accuracy = 0.97
+I0921 21:41:10.780094  8871 caffe.cpp:275] Batch 6, loss = 0.0706933
+I0921 21:41:10.780181  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:10.781198  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:10.781208  8877 data_layer.cpp:103]      Read time: 0.094 ms.
+I0921 21:41:10.781211  8877 data_layer.cpp:104] Transform time: 0.621 ms.
+I0921 21:41:10.860653  8871 caffe.cpp:275] Batch 7, accuracy = 0.99
+I0921 21:41:10.860682  8871 caffe.cpp:275] Batch 7, loss = 0.0272466
+I0921 21:41:10.860769  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:10.861786  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:10.861796  8877 data_layer.cpp:103]      Read time: 0.098 ms.
+I0921 21:41:10.861800  8877 data_layer.cpp:104] Transform time: 0.621 ms.
+I0921 21:41:10.941350  8871 caffe.cpp:275] Batch 8, accuracy = 1
+I0921 21:41:10.941376  8871 caffe.cpp:275] Batch 8, loss = 0.00345752
+I0921 21:41:10.941467  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:10.942500  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:10.942510  8877 data_layer.cpp:103]      Read time: 0.099 ms.
+I0921 21:41:10.942514  8877 data_layer.cpp:104] Transform time: 0.621 ms.
+I0921 21:41:11.021239  8871 caffe.cpp:275] Batch 9, accuracy = 0.99
+I0921 21:41:11.021268  8871 caffe.cpp:275] Batch 9, loss = 0.027792
+I0921 21:41:11.021354  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:11.022387  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:11.022397  8877 data_layer.cpp:103]      Read time: 0.098 ms.
+I0921 21:41:11.022400  8877 data_layer.cpp:104] Transform time: 0.614 ms.
+I0921 21:41:11.100937  8871 caffe.cpp:275] Batch 10, accuracy = 0.98
+I0921 21:41:11.100967  8871 caffe.cpp:275] Batch 10, loss = 0.0609739
+I0921 21:41:11.101054  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:11.102057  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:11.102067  8877 data_layer.cpp:103]      Read time: 0.097 ms.
+I0921 21:41:11.102071  8877 data_layer.cpp:104] Transform time: 0.613 ms.
+I0921 21:41:11.180627  8871 caffe.cpp:275] Batch 11, accuracy = 0.99
+I0921 21:41:11.180675  8871 caffe.cpp:275] Batch 11, loss = 0.0375841
+I0921 21:41:11.180766  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:11.181777  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:11.181787  8877 data_layer.cpp:103]      Read time: 0.097 ms.
+I0921 21:41:11.181790  8877 data_layer.cpp:104] Transform time: 0.613 ms.
+I0921 21:41:11.260424  8871 caffe.cpp:275] Batch 12, accuracy = 0.96
+I0921 21:41:11.260452  8871 caffe.cpp:275] Batch 12, loss = 0.140483
+I0921 21:41:11.260538  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:11.261535  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:11.261545  8877 data_layer.cpp:103]      Read time: 0.093 ms.
+I0921 21:41:11.261549  8877 data_layer.cpp:104] Transform time: 0.612 ms.
+I0921 21:41:11.341117  8871 caffe.cpp:275] Batch 13, accuracy = 0.98
+I0921 21:41:11.341145  8871 caffe.cpp:275] Batch 13, loss = 0.0648711
+I0921 21:41:11.341230  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:11.342234  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:11.342244  8877 data_layer.cpp:103]      Read time: 0.097 ms.
+I0921 21:41:11.342248  8877 data_layer.cpp:104] Transform time: 0.611 ms.
+I0921 21:41:11.421486  8871 caffe.cpp:275] Batch 14, accuracy = 0.99
+I0921 21:41:11.421515  8871 caffe.cpp:275] Batch 14, loss = 0.0290373
+I0921 21:41:11.421619  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:11.422624  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:11.422633  8877 data_layer.cpp:103]      Read time: 0.096 ms.
+I0921 21:41:11.422637  8877 data_layer.cpp:104] Transform time: 0.612 ms.
+I0921 21:41:11.502178  8871 caffe.cpp:275] Batch 15, accuracy = 0.97
+I0921 21:41:11.502207  8871 caffe.cpp:275] Batch 15, loss = 0.0563456
+I0921 21:41:11.502292  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:11.503437  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:11.503448  8877 data_layer.cpp:103]      Read time: 0.115 ms.
+I0921 21:41:11.503451  8877 data_layer.cpp:104] Transform time: 0.689 ms.
+I0921 21:41:11.582718  8871 caffe.cpp:275] Batch 16, accuracy = 0.99
+I0921 21:41:11.582746  8871 caffe.cpp:275] Batch 16, loss = 0.0322963
+I0921 21:41:11.582833  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:11.583832  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:11.583840  8877 data_layer.cpp:103]      Read time: 0.091 ms.
+I0921 21:41:11.583844  8877 data_layer.cpp:104] Transform time: 0.61 ms.
+I0921 21:41:11.662595  8871 caffe.cpp:275] Batch 17, accuracy = 1
+I0921 21:41:11.662621  8871 caffe.cpp:275] Batch 17, loss = 0.0189694
+I0921 21:41:11.662711  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:11.663712  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:11.663722  8877 data_layer.cpp:103]      Read time: 0.095 ms.
+I0921 21:41:11.663727  8877 data_layer.cpp:104] Transform time: 0.611 ms.
+I0921 21:41:11.742341  8871 caffe.cpp:275] Batch 18, accuracy = 1
+I0921 21:41:11.742369  8871 caffe.cpp:275] Batch 18, loss = 0.0092567
+I0921 21:41:11.742458  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:11.743465  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:11.743476  8877 data_layer.cpp:103]      Read time: 0.093 ms.
+I0921 21:41:11.743481  8877 data_layer.cpp:104] Transform time: 0.613 ms.
+I0921 21:41:11.821656  8871 caffe.cpp:275] Batch 19, accuracy = 0.98
+I0921 21:41:11.821684  8871 caffe.cpp:275] Batch 19, loss = 0.0758851
+I0921 21:41:11.821768  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:11.822782  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:11.822793  8877 data_layer.cpp:103]      Read time: 0.098 ms.
+I0921 21:41:11.822798  8877 data_layer.cpp:104] Transform time: 0.605 ms.
+I0921 21:41:11.901396  8871 caffe.cpp:275] Batch 20, accuracy = 0.98
+I0921 21:41:11.901427  8871 caffe.cpp:275] Batch 20, loss = 0.0565319
+I0921 21:41:11.901516  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:11.902531  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:11.902542  8877 data_layer.cpp:103]      Read time: 0.094 ms.
+I0921 21:41:11.902565  8877 data_layer.cpp:104] Transform time: 0.61 ms.
+I0921 21:41:11.981240  8871 caffe.cpp:275] Batch 21, accuracy = 0.98
+I0921 21:41:11.981271  8871 caffe.cpp:275] Batch 21, loss = 0.0871842
+I0921 21:41:11.981370  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:11.982383  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:11.982394  8877 data_layer.cpp:103]      Read time: 0.099 ms.
+I0921 21:41:11.982400  8877 data_layer.cpp:104] Transform time: 0.609 ms.
+I0921 21:41:12.060719  8871 caffe.cpp:275] Batch 22, accuracy = 0.99
+I0921 21:41:12.060746  8871 caffe.cpp:275] Batch 22, loss = 0.0223208
+I0921 21:41:12.060832  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:12.061848  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:12.061859  8877 data_layer.cpp:103]      Read time: 0.094 ms.
+I0921 21:41:12.061866  8877 data_layer.cpp:104] Transform time: 0.611 ms.
+I0921 21:41:12.140431  8871 caffe.cpp:275] Batch 23, accuracy = 0.99
+I0921 21:41:12.140461  8871 caffe.cpp:275] Batch 23, loss = 0.0242149
+I0921 21:41:12.140554  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:12.141567  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:12.141578  8877 data_layer.cpp:103]      Read time: 0.095 ms.
+I0921 21:41:12.141583  8877 data_layer.cpp:104] Transform time: 0.621 ms.
+I0921 21:41:12.220173  8871 caffe.cpp:275] Batch 24, accuracy = 0.96
+I0921 21:41:12.220206  8871 caffe.cpp:275] Batch 24, loss = 0.0567306
+I0921 21:41:12.220295  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:12.221300  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:12.221312  8877 data_layer.cpp:103]      Read time: 0.093 ms.
+I0921 21:41:12.221316  8877 data_layer.cpp:104] Transform time: 0.603 ms.
+I0921 21:41:12.300101  8871 caffe.cpp:275] Batch 25, accuracy = 0.99
+I0921 21:41:12.300129  8871 caffe.cpp:275] Batch 25, loss = 0.0897916
+I0921 21:41:12.300211  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:12.301218  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:12.301229  8877 data_layer.cpp:103]      Read time: 0.09 ms.
+I0921 21:41:12.301234  8877 data_layer.cpp:104] Transform time: 0.611 ms.
+I0921 21:41:12.380187  8871 caffe.cpp:275] Batch 26, accuracy = 0.99
+I0921 21:41:12.380218  8871 caffe.cpp:275] Batch 26, loss = 0.121968
+I0921 21:41:12.380306  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:12.381335  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:12.381346  8877 data_layer.cpp:103]      Read time: 0.1 ms.
+I0921 21:41:12.381352  8877 data_layer.cpp:104] Transform time: 0.609 ms.
+I0921 21:41:12.460439  8871 caffe.cpp:275] Batch 27, accuracy = 1
+I0921 21:41:12.460469  8871 caffe.cpp:275] Batch 27, loss = 0.00966971
+I0921 21:41:12.460551  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:12.461557  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:12.461568  8877 data_layer.cpp:103]      Read time: 0.096 ms.
+I0921 21:41:12.461575  8877 data_layer.cpp:104] Transform time: 0.607 ms.
+I0921 21:41:12.540355  8871 caffe.cpp:275] Batch 28, accuracy = 0.99
+I0921 21:41:12.540385  8871 caffe.cpp:275] Batch 28, loss = 0.0585679
+I0921 21:41:12.540467  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:12.541837  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:12.541848  8877 data_layer.cpp:103]      Read time: 0.17 ms.
+I0921 21:41:12.541851  8877 data_layer.cpp:104] Transform time: 0.798 ms.
+I0921 21:41:12.620465  8871 caffe.cpp:275] Batch 29, accuracy = 0.96
+I0921 21:41:12.620494  8871 caffe.cpp:275] Batch 29, loss = 0.151889
+I0921 21:41:12.620592  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:12.621965  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:12.621976  8877 data_layer.cpp:103]      Read time: 0.173 ms.
+I0921 21:41:12.621980  8877 data_layer.cpp:104] Transform time: 0.804 ms.
+I0921 21:41:12.701113  8871 caffe.cpp:275] Batch 30, accuracy = 0.99
+I0921 21:41:12.701143  8871 caffe.cpp:275] Batch 30, loss = 0.0186675
+I0921 21:41:12.701226  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:12.702590  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:12.702601  8877 data_layer.cpp:103]      Read time: 0.168 ms.
+I0921 21:41:12.702605  8877 data_layer.cpp:104] Transform time: 0.79 ms.
+I0921 21:41:12.781646  8871 caffe.cpp:275] Batch 31, accuracy = 1
+I0921 21:41:12.781673  8871 caffe.cpp:275] Batch 31, loss = 0.00439697
+I0921 21:41:12.781757  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:12.783128  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:12.783139  8877 data_layer.cpp:103]      Read time: 0.175 ms.
+I0921 21:41:12.783143  8877 data_layer.cpp:104] Transform time: 0.798 ms.
+I0921 21:41:12.861796  8871 caffe.cpp:275] Batch 32, accuracy = 1
+I0921 21:41:12.861824  8871 caffe.cpp:275] Batch 32, loss = 0.00667838
+I0921 21:41:12.861912  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:12.863272  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:12.863283  8877 data_layer.cpp:103]      Read time: 0.176 ms.
+I0921 21:41:12.863287  8877 data_layer.cpp:104] Transform time: 0.801 ms.
+I0921 21:41:12.942474  8871 caffe.cpp:275] Batch 33, accuracy = 1
+I0921 21:41:12.942502  8871 caffe.cpp:275] Batch 33, loss = 0.00394071
+I0921 21:41:12.942585  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:12.943960  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:12.943971  8877 data_layer.cpp:103]      Read time: 0.171 ms.
+I0921 21:41:12.943974  8877 data_layer.cpp:104] Transform time: 0.797 ms.
+I0921 21:41:13.022768  8871 caffe.cpp:275] Batch 34, accuracy = 0.99
+I0921 21:41:13.022796  8871 caffe.cpp:275] Batch 34, loss = 0.0591817
+I0921 21:41:13.022879  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:13.024258  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:13.024269  8877 data_layer.cpp:103]      Read time: 0.179 ms.
+I0921 21:41:13.024272  8877 data_layer.cpp:104] Transform time: 0.816 ms.
+I0921 21:41:13.102345  8871 caffe.cpp:275] Batch 35, accuracy = 0.96
+I0921 21:41:13.102375  8871 caffe.cpp:275] Batch 35, loss = 0.124499
+I0921 21:41:13.102463  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:13.103880  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:13.103891  8877 data_layer.cpp:103]      Read time: 0.183 ms.
+I0921 21:41:13.103895  8877 data_layer.cpp:104] Transform time: 0.86 ms.
+I0921 21:41:13.181725  8871 caffe.cpp:275] Batch 36, accuracy = 1
+I0921 21:41:13.181754  8871 caffe.cpp:275] Batch 36, loss = 0.00288818
+I0921 21:41:13.181838  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:13.183204  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:13.183215  8877 data_layer.cpp:103]      Read time: 0.177 ms.
+I0921 21:41:13.183218  8877 data_layer.cpp:104] Transform time: 0.801 ms.
+I0921 21:41:13.261196  8871 caffe.cpp:275] Batch 37, accuracy = 0.96
+I0921 21:41:13.261224  8871 caffe.cpp:275] Batch 37, loss = 0.0667159
+I0921 21:41:13.261307  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:13.262677  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:13.262688  8877 data_layer.cpp:103]      Read time: 0.176 ms.
+I0921 21:41:13.262692  8877 data_layer.cpp:104] Transform time: 0.802 ms.
+I0921 21:41:13.341747  8871 caffe.cpp:275] Batch 38, accuracy = 0.99
+I0921 21:41:13.341778  8871 caffe.cpp:275] Batch 38, loss = 0.0246389
+I0921 21:41:13.341868  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:13.343236  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:13.343246  8877 data_layer.cpp:103]      Read time: 0.17 ms.
+I0921 21:41:13.343250  8877 data_layer.cpp:104] Transform time: 0.803 ms.
+I0921 21:41:13.422132  8871 caffe.cpp:275] Batch 39, accuracy = 0.97
+I0921 21:41:13.422159  8871 caffe.cpp:275] Batch 39, loss = 0.0538702
+I0921 21:41:13.422242  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:13.423621  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:13.423632  8877 data_layer.cpp:103]      Read time: 0.177 ms.
+I0921 21:41:13.423635  8877 data_layer.cpp:104] Transform time: 0.804 ms.
+I0921 21:41:13.502362  8871 caffe.cpp:275] Batch 40, accuracy = 0.99
+I0921 21:41:13.502406  8871 caffe.cpp:275] Batch 40, loss = 0.0213094
+I0921 21:41:13.502486  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:13.503854  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:13.503865  8877 data_layer.cpp:103]      Read time: 0.176 ms.
+I0921 21:41:13.503868  8877 data_layer.cpp:104] Transform time: 0.799 ms.
+I0921 21:41:13.582121  8871 caffe.cpp:275] Batch 41, accuracy = 0.98
+I0921 21:41:13.582149  8871 caffe.cpp:275] Batch 41, loss = 0.0696531
+I0921 21:41:13.582234  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:13.583600  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:13.583611  8877 data_layer.cpp:103]      Read time: 0.179 ms.
+I0921 21:41:13.583614  8877 data_layer.cpp:104] Transform time: 0.798 ms.
+I0921 21:41:13.662704  8871 caffe.cpp:275] Batch 42, accuracy = 0.99
+I0921 21:41:13.662734  8871 caffe.cpp:275] Batch 42, loss = 0.0321351
+I0921 21:41:13.662818  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:13.664180  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:13.664191  8877 data_layer.cpp:103]      Read time: 0.175 ms.
+I0921 21:41:13.664194  8877 data_layer.cpp:104] Transform time: 0.791 ms.
+I0921 21:41:13.743609  8871 caffe.cpp:275] Batch 43, accuracy = 1
+I0921 21:41:13.743638  8871 caffe.cpp:275] Batch 43, loss = 0.00607767
+I0921 21:41:13.743721  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:13.745100  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:13.745112  8877 data_layer.cpp:103]      Read time: 0.175 ms.
+I0921 21:41:13.745115  8877 data_layer.cpp:104] Transform time: 0.803 ms.
+I0921 21:41:13.823856  8871 caffe.cpp:275] Batch 44, accuracy = 0.99
+I0921 21:41:13.823884  8871 caffe.cpp:275] Batch 44, loss = 0.0242511
+I0921 21:41:13.823988  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:13.825001  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:13.825011  8877 data_layer.cpp:103]      Read time: 0.092 ms.
+I0921 21:41:13.825014  8877 data_layer.cpp:104] Transform time: 0.617 ms.
+I0921 21:41:13.903436  8871 caffe.cpp:275] Batch 45, accuracy = 0.99
+I0921 21:41:13.903466  8871 caffe.cpp:275] Batch 45, loss = 0.0264348
+I0921 21:41:13.903554  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:13.904579  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:13.904589  8877 data_layer.cpp:103]      Read time: 0.097 ms.
+I0921 21:41:13.904593  8877 data_layer.cpp:104] Transform time: 0.627 ms.
+I0921 21:41:13.983479  8871 caffe.cpp:275] Batch 46, accuracy = 1
+I0921 21:41:13.983506  8871 caffe.cpp:275] Batch 46, loss = 0.0145511
+I0921 21:41:13.983587  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:13.984608  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:13.984619  8877 data_layer.cpp:103]      Read time: 0.099 ms.
+I0921 21:41:13.984622  8877 data_layer.cpp:104] Transform time: 0.619 ms.
+I0921 21:41:14.063200  8871 caffe.cpp:275] Batch 47, accuracy = 0.99
+I0921 21:41:14.063228  8871 caffe.cpp:275] Batch 47, loss = 0.0140863
+I0921 21:41:14.063314  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:14.064337  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:14.064347  8877 data_layer.cpp:103]      Read time: 0.095 ms.
+I0921 21:41:14.064350  8877 data_layer.cpp:104] Transform time: 0.624 ms.
+I0921 21:41:14.142683  8871 caffe.cpp:275] Batch 48, accuracy = 0.96
+I0921 21:41:14.142712  8871 caffe.cpp:275] Batch 48, loss = 0.09362
+I0921 21:41:14.142802  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:14.143824  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:14.143834  8877 data_layer.cpp:103]      Read time: 0.097 ms.
+I0921 21:41:14.143837  8877 data_layer.cpp:104] Transform time: 0.618 ms.
+I0921 21:41:14.222368  8871 caffe.cpp:275] Batch 49, accuracy = 1
+I0921 21:41:14.222398  8871 caffe.cpp:275] Batch 49, loss = 0.00957835
+I0921 21:41:14.222482  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:14.223492  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:14.223502  8877 data_layer.cpp:103]      Read time: 0.1 ms.
+I0921 21:41:14.223516  8877 data_layer.cpp:104] Transform time: 0.613 ms.
+I0921 21:41:14.302158  8871 caffe.cpp:275] Batch 50, accuracy = 1
+I0921 21:41:14.302186  8871 caffe.cpp:275] Batch 50, loss = 0.000173879
+I0921 21:41:14.302276  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:14.303653  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:14.303664  8877 data_layer.cpp:103]      Read time: 0.173 ms.
+I0921 21:41:14.303668  8877 data_layer.cpp:104] Transform time: 0.804 ms.
+I0921 21:41:14.382746  8871 caffe.cpp:275] Batch 51, accuracy = 1
+I0921 21:41:14.382774  8871 caffe.cpp:275] Batch 51, loss = 0.00559599
+I0921 21:41:14.382860  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:14.384237  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:14.384248  8877 data_layer.cpp:103]      Read time: 0.181 ms.
+I0921 21:41:14.384251  8877 data_layer.cpp:104] Transform time: 0.802 ms.
+I0921 21:41:14.463505  8871 caffe.cpp:275] Batch 52, accuracy = 1
+I0921 21:41:14.463533  8871 caffe.cpp:275] Batch 52, loss = 0.0087746
+I0921 21:41:14.463616  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:14.464998  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:14.465008  8877 data_layer.cpp:103]      Read time: 0.185 ms.
+I0921 21:41:14.465013  8877 data_layer.cpp:104] Transform time: 0.801 ms.
+I0921 21:41:14.544121  8871 caffe.cpp:275] Batch 53, accuracy = 1
+I0921 21:41:14.544148  8871 caffe.cpp:275] Batch 53, loss = 0.000667571
+I0921 21:41:14.544245  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:14.545632  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:14.545644  8877 data_layer.cpp:103]      Read time: 0.177 ms.
+I0921 21:41:14.545647  8877 data_layer.cpp:104] Transform time: 0.804 ms.
+I0921 21:41:14.624238  8871 caffe.cpp:275] Batch 54, accuracy = 1
+I0921 21:41:14.624269  8871 caffe.cpp:275] Batch 54, loss = 0.00212931
+I0921 21:41:14.624353  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:14.625728  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:14.625740  8877 data_layer.cpp:103]      Read time: 0.174 ms.
+I0921 21:41:14.625743  8877 data_layer.cpp:104] Transform time: 0.804 ms.
+I0921 21:41:14.704305  8871 caffe.cpp:275] Batch 55, accuracy = 1
+I0921 21:41:14.704332  8871 caffe.cpp:275] Batch 55, loss = 0.000145246
+I0921 21:41:14.704416  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:14.705791  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:14.705802  8877 data_layer.cpp:103]      Read time: 0.174 ms.
+I0921 21:41:14.705806  8877 data_layer.cpp:104] Transform time: 0.795 ms.
+I0921 21:41:14.784302  8871 caffe.cpp:275] Batch 56, accuracy = 1
+I0921 21:41:14.784330  8871 caffe.cpp:275] Batch 56, loss = 0.0081723
+I0921 21:41:14.784416  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:14.785790  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:14.785801  8877 data_layer.cpp:103]      Read time: 0.178 ms.
+I0921 21:41:14.785804  8877 data_layer.cpp:104] Transform time: 0.799 ms.
+I0921 21:41:14.864822  8871 caffe.cpp:275] Batch 57, accuracy = 1
+I0921 21:41:14.864850  8871 caffe.cpp:275] Batch 57, loss = 0.0028098
+I0921 21:41:14.864934  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:14.866310  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:14.866322  8877 data_layer.cpp:103]      Read time: 0.171 ms.
+I0921 21:41:14.866325  8877 data_layer.cpp:104] Transform time: 0.8 ms.
+I0921 21:41:14.945613  8871 caffe.cpp:275] Batch 58, accuracy = 1
+I0921 21:41:14.945641  8871 caffe.cpp:275] Batch 58, loss = 0.00692516
+I0921 21:41:14.945720  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:14.947085  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:14.947096  8877 data_layer.cpp:103]      Read time: 0.173 ms.
+I0921 21:41:14.947100  8877 data_layer.cpp:104] Transform time: 0.792 ms.
+I0921 21:41:15.024983  8871 caffe.cpp:275] Batch 59, accuracy = 0.97
+I0921 21:41:15.025012  8871 caffe.cpp:275] Batch 59, loss = 0.118624
+I0921 21:41:15.025115  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:15.026505  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:15.026516  8877 data_layer.cpp:103]      Read time: 0.174 ms.
+I0921 21:41:15.026520  8877 data_layer.cpp:104] Transform time: 0.802 ms.
+I0921 21:41:15.105723  8871 caffe.cpp:275] Batch 60, accuracy = 1
+I0921 21:41:15.105752  8871 caffe.cpp:275] Batch 60, loss = 0.00538928
+I0921 21:41:15.105839  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:15.107215  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:15.107226  8877 data_layer.cpp:103]      Read time: 0.165 ms.
+I0921 21:41:15.107230  8877 data_layer.cpp:104] Transform time: 0.801 ms.
+I0921 21:41:15.186313  8871 caffe.cpp:275] Batch 61, accuracy = 1
+I0921 21:41:15.186341  8871 caffe.cpp:275] Batch 61, loss = 0.00164698
+I0921 21:41:15.186424  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:15.187793  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:15.187804  8877 data_layer.cpp:103]      Read time: 0.167 ms.
+I0921 21:41:15.187808  8877 data_layer.cpp:104] Transform time: 0.802 ms.
+I0921 21:41:15.267060  8871 caffe.cpp:275] Batch 62, accuracy = 1
+I0921 21:41:15.267088  8871 caffe.cpp:275] Batch 62, loss = 2.36569e-05
+I0921 21:41:15.267176  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:15.268555  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:15.268568  8877 data_layer.cpp:103]      Read time: 0.18 ms.
+I0921 21:41:15.268571  8877 data_layer.cpp:104] Transform time: 0.805 ms.
+I0921 21:41:15.347219  8871 caffe.cpp:275] Batch 63, accuracy = 1
+I0921 21:41:15.347245  8871 caffe.cpp:275] Batch 63, loss = 0.000196873
+I0921 21:41:15.347328  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:15.348701  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:15.348711  8877 data_layer.cpp:103]      Read time: 0.177 ms.
+I0921 21:41:15.348716  8877 data_layer.cpp:104] Transform time: 0.803 ms.
+I0921 21:41:15.428026  8871 caffe.cpp:275] Batch 64, accuracy = 1
+I0921 21:41:15.428053  8871 caffe.cpp:275] Batch 64, loss = 0.0010453
+I0921 21:41:15.428135  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:15.429512  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:15.429523  8877 data_layer.cpp:103]      Read time: 0.185 ms.
+I0921 21:41:15.429527  8877 data_layer.cpp:104] Transform time: 0.813 ms.
+I0921 21:41:15.508811  8871 caffe.cpp:275] Batch 65, accuracy = 0.95
+I0921 21:41:15.508838  8871 caffe.cpp:275] Batch 65, loss = 0.123905
+I0921 21:41:15.508925  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:15.510288  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:15.510299  8877 data_layer.cpp:103]      Read time: 0.172 ms.
+I0921 21:41:15.510303  8877 data_layer.cpp:104] Transform time: 0.797 ms.
+I0921 21:41:15.589028  8871 caffe.cpp:275] Batch 66, accuracy = 0.98
+I0921 21:41:15.589051  8871 caffe.cpp:275] Batch 66, loss = 0.0971261
+I0921 21:41:15.589131  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:15.590499  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:15.590510  8877 data_layer.cpp:103]      Read time: 0.175 ms.
+I0921 21:41:15.590514  8877 data_layer.cpp:104] Transform time: 0.799 ms.
+I0921 21:41:15.668983  8871 caffe.cpp:275] Batch 67, accuracy = 0.99
+I0921 21:41:15.669010  8871 caffe.cpp:275] Batch 67, loss = 0.0209769
+I0921 21:41:15.669092  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:15.670296  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:15.670306  8877 data_layer.cpp:103]      Read time: 0.125 ms.
+I0921 21:41:15.670310  8877 data_layer.cpp:104] Transform time: 0.723 ms.
+I0921 21:41:15.748459  8871 caffe.cpp:275] Batch 68, accuracy = 0.99
+I0921 21:41:15.748487  8871 caffe.cpp:275] Batch 68, loss = 0.0167292
+I0921 21:41:15.748576  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:15.749580  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:15.749590  8877 data_layer.cpp:103]      Read time: 0.095 ms.
+I0921 21:41:15.749594  8877 data_layer.cpp:104] Transform time: 0.611 ms.
+I0921 21:41:15.827849  8871 caffe.cpp:275] Batch 69, accuracy = 1
+I0921 21:41:15.827896  8871 caffe.cpp:275] Batch 69, loss = 0.00157605
+I0921 21:41:15.827980  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:15.828992  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:15.829004  8877 data_layer.cpp:103]      Read time: 0.094 ms.
+I0921 21:41:15.829006  8877 data_layer.cpp:104] Transform time: 0.619 ms.
+I0921 21:41:15.908488  8871 caffe.cpp:275] Batch 70, accuracy = 1
+I0921 21:41:15.908514  8871 caffe.cpp:275] Batch 70, loss = 0.000786224
+I0921 21:41:15.908594  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:15.909603  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:15.909613  8877 data_layer.cpp:103]      Read time: 0.095 ms.
+I0921 21:41:15.909616  8877 data_layer.cpp:104] Transform time: 0.614 ms.
+I0921 21:41:15.989215  8871 caffe.cpp:275] Batch 71, accuracy = 1
+I0921 21:41:15.989243  8871 caffe.cpp:275] Batch 71, loss = 0.000611304
+I0921 21:41:15.989329  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:15.990346  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:15.990357  8877 data_layer.cpp:103]      Read time: 0.096 ms.
+I0921 21:41:15.990360  8877 data_layer.cpp:104] Transform time: 0.614 ms.
+I0921 21:41:16.069808  8871 caffe.cpp:275] Batch 72, accuracy = 1
+I0921 21:41:16.069836  8871 caffe.cpp:275] Batch 72, loss = 0.00405822
+I0921 21:41:16.069921  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:16.071087  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:16.071097  8877 data_layer.cpp:103]      Read time: 0.122 ms.
+I0921 21:41:16.071101  8877 data_layer.cpp:104] Transform time: 0.699 ms.
+I0921 21:41:16.149646  8871 caffe.cpp:275] Batch 73, accuracy = 1
+I0921 21:41:16.149672  8871 caffe.cpp:275] Batch 73, loss = 0.000134106
+I0921 21:41:16.149757  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:16.150785  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:16.150795  8877 data_layer.cpp:103]      Read time: 0.099 ms.
+I0921 21:41:16.150799  8877 data_layer.cpp:104] Transform time: 0.61 ms.
+I0921 21:41:16.229884  8871 caffe.cpp:275] Batch 74, accuracy = 1
+I0921 21:41:16.229913  8871 caffe.cpp:275] Batch 74, loss = 0.00203246
+I0921 21:41:16.230003  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:16.231020  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:16.231030  8877 data_layer.cpp:103]      Read time: 0.098 ms.
+I0921 21:41:16.231034  8877 data_layer.cpp:104] Transform time: 0.615 ms.
+I0921 21:41:16.309947  8871 caffe.cpp:275] Batch 75, accuracy = 1
+I0921 21:41:16.309975  8871 caffe.cpp:275] Batch 75, loss = 0.000942684
+I0921 21:41:16.310065  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:16.311084  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:16.311094  8877 data_layer.cpp:103]      Read time: 0.092 ms.
+I0921 21:41:16.311097  8877 data_layer.cpp:104] Transform time: 0.609 ms.
+I0921 21:41:16.390269  8871 caffe.cpp:275] Batch 76, accuracy = 1
+I0921 21:41:16.390296  8871 caffe.cpp:275] Batch 76, loss = 0.000140908
+I0921 21:41:16.390383  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:16.391412  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:16.391422  8877 data_layer.cpp:103]      Read time: 0.093 ms.
+I0921 21:41:16.391427  8877 data_layer.cpp:104] Transform time: 0.613 ms.
+I0921 21:41:16.471158  8871 caffe.cpp:275] Batch 77, accuracy = 1
+I0921 21:41:16.471186  8871 caffe.cpp:275] Batch 77, loss = 0.00017122
+I0921 21:41:16.471277  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:16.472295  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:16.472304  8877 data_layer.cpp:103]      Read time: 0.09 ms.
+I0921 21:41:16.472308  8877 data_layer.cpp:104] Transform time: 0.608 ms.
+I0921 21:41:16.552290  8871 caffe.cpp:275] Batch 78, accuracy = 1
+I0921 21:41:16.552317  8871 caffe.cpp:275] Batch 78, loss = 0.00130696
+I0921 21:41:16.552400  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:16.553413  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:16.553423  8877 data_layer.cpp:103]      Read time: 0.092 ms.
+I0921 21:41:16.553441  8877 data_layer.cpp:104] Transform time: 0.617 ms.
+I0921 21:41:16.633098  8871 caffe.cpp:275] Batch 79, accuracy = 1
+I0921 21:41:16.633127  8871 caffe.cpp:275] Batch 79, loss = 0.00164212
+I0921 21:41:16.633213  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:16.634219  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:16.634229  8877 data_layer.cpp:103]      Read time: 0.097 ms.
+I0921 21:41:16.634233  8877 data_layer.cpp:104] Transform time: 0.615 ms.
+I0921 21:41:16.713822  8871 caffe.cpp:275] Batch 80, accuracy = 1
+I0921 21:41:16.713850  8871 caffe.cpp:275] Batch 80, loss = 0.00841114
+I0921 21:41:16.713942  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:16.714949  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:16.714958  8877 data_layer.cpp:103]      Read time: 0.093 ms.
+I0921 21:41:16.714962  8877 data_layer.cpp:104] Transform time: 0.615 ms.
+I0921 21:41:16.793861  8871 caffe.cpp:275] Batch 81, accuracy = 1
+I0921 21:41:16.793887  8871 caffe.cpp:275] Batch 81, loss = 0.00187654
+I0921 21:41:16.793972  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:16.795001  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:16.795011  8877 data_layer.cpp:103]      Read time: 0.091 ms.
+I0921 21:41:16.795016  8877 data_layer.cpp:104] Transform time: 0.628 ms.
+I0921 21:41:16.872970  8871 caffe.cpp:275] Batch 82, accuracy = 1
+I0921 21:41:16.872997  8871 caffe.cpp:275] Batch 82, loss = 0.000671994
+I0921 21:41:16.873080  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:16.874101  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:16.874111  8877 data_layer.cpp:103]      Read time: 0.094 ms.
+I0921 21:41:16.874114  8877 data_layer.cpp:104] Transform time: 0.619 ms.
+I0921 21:41:16.952960  8871 caffe.cpp:275] Batch 83, accuracy = 0.99
+I0921 21:41:16.952986  8871 caffe.cpp:275] Batch 83, loss = 0.0163408
+I0921 21:41:16.953070  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:16.954115  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:16.954125  8877 data_layer.cpp:103]      Read time: 0.108 ms.
+I0921 21:41:16.954129  8877 data_layer.cpp:104] Transform time: 0.631 ms.
+I0921 21:41:17.033493  8871 caffe.cpp:275] Batch 84, accuracy = 0.99
+I0921 21:41:17.033521  8871 caffe.cpp:275] Batch 84, loss = 0.0209243
+I0921 21:41:17.033608  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:17.034643  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:17.034653  8877 data_layer.cpp:103]      Read time: 0.09 ms.
+I0921 21:41:17.034657  8877 data_layer.cpp:104] Transform time: 0.617 ms.
+I0921 21:41:17.113602  8871 caffe.cpp:275] Batch 85, accuracy = 0.99
+I0921 21:41:17.113632  8871 caffe.cpp:275] Batch 85, loss = 0.0101306
+I0921 21:41:17.113718  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:17.114836  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:17.114846  8877 data_layer.cpp:103]      Read time: 0.113 ms.
+I0921 21:41:17.114850  8877 data_layer.cpp:104] Transform time: 0.661 ms.
+I0921 21:41:17.193497  8871 caffe.cpp:275] Batch 86, accuracy = 1
+I0921 21:41:17.193526  8871 caffe.cpp:275] Batch 86, loss = 0.000104447
+I0921 21:41:17.193615  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:17.194629  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:17.194639  8877 data_layer.cpp:103]      Read time: 0.101 ms.
+I0921 21:41:17.194643  8877 data_layer.cpp:104] Transform time: 0.611 ms.
+I0921 21:41:17.273334  8871 caffe.cpp:275] Batch 87, accuracy = 1
+I0921 21:41:17.273361  8871 caffe.cpp:275] Batch 87, loss = 9.4556e-05
+I0921 21:41:17.273450  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:17.274473  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:17.274483  8877 data_layer.cpp:103]      Read time: 0.091 ms.
+I0921 21:41:17.274487  8877 data_layer.cpp:104] Transform time: 0.619 ms.
+I0921 21:41:17.352974  8871 caffe.cpp:275] Batch 88, accuracy = 1
+I0921 21:41:17.353000  8871 caffe.cpp:275] Batch 88, loss = 3.53292e-05
+I0921 21:41:17.353101  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:17.354164  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:17.354176  8877 data_layer.cpp:103]      Read time: 0.102 ms.
+I0921 21:41:17.354178  8877 data_layer.cpp:104] Transform time: 0.639 ms.
+I0921 21:41:17.432770  8871 caffe.cpp:275] Batch 89, accuracy = 1
+I0921 21:41:17.432797  8871 caffe.cpp:275] Batch 89, loss = 3.17166e-05
+I0921 21:41:17.432888  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:17.433895  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:17.433904  8877 data_layer.cpp:103]      Read time: 0.097 ms.
+I0921 21:41:17.433908  8877 data_layer.cpp:104] Transform time: 0.612 ms.
+I0921 21:41:17.512485  8871 caffe.cpp:275] Batch 90, accuracy = 0.96
+I0921 21:41:17.512512  8871 caffe.cpp:275] Batch 90, loss = 0.103274
+I0921 21:41:17.512599  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:17.513622  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:17.513631  8877 data_layer.cpp:103]      Read time: 0.09 ms.
+I0921 21:41:17.513635  8877 data_layer.cpp:104] Transform time: 0.614 ms.
+I0921 21:41:17.592236  8871 caffe.cpp:275] Batch 91, accuracy = 1
+I0921 21:41:17.592263  8871 caffe.cpp:275] Batch 91, loss = 2.32174e-05
+I0921 21:41:17.592350  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:17.593369  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:17.593379  8876 data_reader.cpp:114] Restarting data prefetching from start.
+I0921 21:41:17.593379  8877 data_layer.cpp:103]      Read time: 0.095 ms.
+I0921 21:41:17.593399  8877 data_layer.cpp:104] Transform time: 0.61 ms.
+I0921 21:41:17.672233  8871 caffe.cpp:275] Batch 92, accuracy = 1
+I0921 21:41:17.672261  8871 caffe.cpp:275] Batch 92, loss = 0.000187771
+I0921 21:41:17.672353  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:17.673379  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:17.673389  8877 data_layer.cpp:103]      Read time: 0.092 ms.
+I0921 21:41:17.673393  8877 data_layer.cpp:104] Transform time: 0.609 ms.
+I0921 21:41:17.751894  8871 caffe.cpp:275] Batch 93, accuracy = 1
+I0921 21:41:17.751920  8871 caffe.cpp:275] Batch 93, loss = 0.000191901
+I0921 21:41:17.752005  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:17.753060  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:17.753070  8877 data_layer.cpp:103]      Read time: 0.099 ms.
+I0921 21:41:17.753074  8877 data_layer.cpp:104] Transform time: 0.613 ms.
+I0921 21:41:17.831842  8871 caffe.cpp:275] Batch 94, accuracy = 1
+I0921 21:41:17.831868  8871 caffe.cpp:275] Batch 94, loss = 0.000309107
+I0921 21:41:17.831943  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:17.832957  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:17.832967  8877 data_layer.cpp:103]      Read time: 0.1 ms.
+I0921 21:41:17.832970  8877 data_layer.cpp:104] Transform time: 0.613 ms.
+I0921 21:41:17.912621  8871 caffe.cpp:275] Batch 95, accuracy = 1
+I0921 21:41:17.912650  8871 caffe.cpp:275] Batch 95, loss = 0.00173667
+I0921 21:41:17.912746  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:17.913764  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:17.913774  8877 data_layer.cpp:103]      Read time: 0.102 ms.
+I0921 21:41:17.913779  8877 data_layer.cpp:104] Transform time: 0.641 ms.
+I0921 21:41:17.993589  8871 caffe.cpp:275] Batch 96, accuracy = 0.98
+I0921 21:41:17.993618  8871 caffe.cpp:275] Batch 96, loss = 0.0589374
+I0921 21:41:17.993705  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:17.994746  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:17.994757  8877 data_layer.cpp:103]      Read time: 0.094 ms.
+I0921 21:41:17.994761  8877 data_layer.cpp:104] Transform time: 0.625 ms.
+I0921 21:41:18.073586  8871 caffe.cpp:275] Batch 97, accuracy = 0.97
+I0921 21:41:18.073616  8871 caffe.cpp:275] Batch 97, loss = 0.0721954
+I0921 21:41:18.073696  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:18.074708  8877 data_layer.cpp:102] Prefetch batch: 0 ms.
+I0921 21:41:18.074718  8877 data_layer.cpp:103]      Read time: 0.099 ms.
+I0921 21:41:18.074734  8877 data_layer.cpp:104] Transform time: 0.617 ms.
+I0921 21:41:18.153074  8871 caffe.cpp:275] Batch 98, accuracy = 1
+I0921 21:41:18.153102  8871 caffe.cpp:275] Batch 98, loss = 0.00193704
+I0921 21:41:18.153189  8871 base_data_layer.cpp:115] Prefetch copied
+I0921 21:41:18.154235  8877 data_layer.cpp:102] Prefetch batch: 1 ms.
+I0921 21:41:18.154245  8877 data_layer.cpp:103]      Read time: 0.105 ms.
+I0921 21:41:18.154249  8877 data_layer.cpp:104] Transform time: 0.659 ms.
+I0921 21:41:18.232844  8871 caffe.cpp:275] Batch 99, accuracy = 0.99
+I0921 21:41:18.232873  8871 caffe.cpp:275] Batch 99, loss = 0.0118484
+I0921 21:41:18.232878  8871 caffe.cpp:280] Loss: 0.0296441
+I0921 21:41:18.232888  8871 caffe.cpp:292] accuracy = 0.9907
+I0921 21:41:18.232899  8871 caffe.cpp:292] loss = 0.0296441 (* 1 = 0.0296441 loss)

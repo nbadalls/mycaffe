@@ -1,0 +1,1030 @@
+GNU gdb (Ubuntu 7.7.1-0ubuntu5~14.04.2) 7.7.1
+Copyright (C) 2014 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+<http://www.gnu.org/software/gdb/documentation/>.
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from ./build/tools/caffe...done.
+(gdb) b solver:[K.cpp 30
+Function "solver.cpp 30" not defined.
+Make breakpoint pending on future shared library load? (y or [n]) 
+Breakpoint 1 (solver.cpp 30) pending.
+(gdb) b solver.cpp 39
+Function "solver.cpp 39" not defined.
+Make breakpoint pending on future shared library load? (y or [n]) 
+Breakpoint 2 (solver.cpp 39) pending.
+(gdb) r
+Starting program: /home/minivision/SoftWare/caffe/.build_debug/tools/caffe train --solver=examples/pedestrain_1.4W/lenet_solver_src.prototxt
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+[New Thread 0x7fffd8f2b700 (LWP 540)]
+I0124 10:23:15.728823   536 caffe.cpp:185] Using GPUs 0
+I0124 10:23:15.753741   536 caffe.cpp:190] GPU 0: GeForce GTX 970
+I0124 10:23:15.876536   536 solver.cpp:48] Initializing solver from parameters: 
+test_iter: 100
+test_interval: 500
+base_lr: 0.01
+display: 100
+max_iter: 10000
+lr_policy: "inv"
+gamma: 0.0001
+power: 0.75
+momentum: 0.9
+weight_decay: 0.0005
+snapshot: 5000
+snapshot_prefix: "examples/pedestrain_1.4W/singlelabel_model/singlelabel_lenet"
+solver_mode: GPU
+device_id: 0
+net: "examples/pedestrain_1.4W/lenet_train_test_src.prototxt"
+I0124 10:23:15.876704   536 solver.cpp:91] Creating training net from net file: examples/pedestrain_1.4W/lenet_train_test_src.prototxt
+I0124 10:23:15.877089   536 net.cpp:313] The NetState phase (0) differed from the phase (1) specified by a rule in layer mnist
+I0124 10:23:15.877106   536 net.cpp:313] The NetState phase (0) differed from the phase (1) specified by a rule in layer accuracy
+I0124 10:23:15.877177   536 net.cpp:49] Initializing net from parameters: 
+name: "LeNet"
+state {
+  phase: TRAIN
+}
+layer {
+  name: "mnist"
+  type: "Data"
+  top: "data"
+  top: "label"
+  include {
+    phase: TRAIN
+  }
+  transform_param {
+    scale: 0.00390625
+  }
+  data_param {
+    source: "examples/pedestrain_1.4W/pedestrain_1.4W_train_lmdb"
+    batch_size: 64
+    backend: LMDB
+  }
+}
+layer {
+  name: "conv1"
+  type: "Convolution"
+  bottom: "data"
+  top: "conv1"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  convolution_param {
+    num_output: 20
+    kernel_size: 5
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "pool1"
+  type: "Pooling"
+  bottom: "conv1"
+  top: "pool1"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+layer {
+  name: "conv2"
+  type: "Convolution"
+  bottom: "pool1"
+  top: "conv2"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  convolution_param {
+    num_output: 50
+    kernel_size: 5
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "pool2"
+  type: "Pooling"
+  bottom: "conv2"
+  top: "pool2"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+layer {
+  name: "ip1"
+  type: "InnerProduct"
+  bottom: "pool2"
+  top: "ip1"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  inner_product_param {
+    num_output: 500
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "relu1"
+  type: "ReLU"
+  bottom: "ip1"
+  top: "ip1"
+}
+layer {
+  name: "ip2"
+  type: "InnerProduct"
+  bottom: "ip1"
+  top: "ip2"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  inner_product_param {
+    num_output: 2
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "loss"
+  type: "SoftmaxWithLoss"
+  bottom: "ip2"
+  bottom: "label"
+  top: "loss"
+}
+I0124 10:23:15.877434   536 layer_factory.hpp:77] Creating layer mnist
+I0124 10:23:15.878424   536 net.cpp:91] Creating Layer mnist
+I0124 10:23:15.878453   536 net.cpp:399] mnist -> data
+I0124 10:23:15.878556   536 net.cpp:399] mnist -> label
+I0124 10:23:15.878973   544 db_lmdb.cpp:35] Opened lmdb examples/pedestrain_1.4W/pedestrain_1.4W_train_lmdb
+I0124 10:23:15.893760   536 data_layer.cpp:41] output data size: 64,3,80,80
+I0124 10:23:15.899492   536 base_data_layer.cpp:69] Initializing prefetch
+I0124 10:23:15.900012   536 base_data_layer.cpp:72] Prefetch initialized.
+I0124 10:23:15.900034   536 net.cpp:141] Setting up mnist
+I0124 10:23:15.900058   536 net.cpp:148] Top shape: 64 3 80 80 (1228800)
+I0124 10:23:15.900074   536 net.cpp:148] Top shape: 64 (64)
+I0124 10:23:15.900077   536 net.cpp:156] Memory required for data: 4915456
+I0124 10:23:15.900099   536 layer_factory.hpp:77] Creating layer conv1
+I0124 10:23:15.900184   536 net.cpp:91] Creating Layer conv1
+I0124 10:23:15.900199   536 net.cpp:425] conv1 <- data
+I0124 10:23:15.900254   536 net.cpp:399] conv1 -> conv1
+I0124 10:23:15.907971   545 data_layer.cpp:102] Prefetch batch: 7 ms.
+I0124 10:23:15.907995   545 data_layer.cpp:103]      Read time: 0.066 ms.
+I0124 10:23:15.908026   545 data_layer.cpp:104] Transform time: 6.146 ms.
+I0124 10:23:15.918222   545 data_layer.cpp:102] Prefetch batch: 6 ms.
+I0124 10:23:15.918256   545 data_layer.cpp:103]      Read time: 0.061 ms.
+I0124 10:23:15.918261   545 data_layer.cpp:104] Transform time: 5.92 ms.
+I0124 10:23:15.928259   545 data_layer.cpp:102] Prefetch batch: 7 ms.
+I0124 10:23:15.928292   545 data_layer.cpp:103]      Read time: 0.066 ms.
+I0124 10:23:15.928297   545 data_layer.cpp:104] Transform time: 6.115 ms.
+I0124 10:23:16.016705   536 cudnn_conv_layer.cpp:194] Reallocating workspace storage: 121752
+I0124 10:23:16.016809   536 net.cpp:141] Setting up conv1
+I0124 10:23:16.016827   536 net.cpp:148] Top shape: 64 20 76 76 (7393280)
+I0124 10:23:16.016830   536 net.cpp:156] Memory required for data: 34488576
+I0124 10:23:16.016887   536 layer_factory.hpp:77] Creating layer pool1
+I0124 10:23:16.016923   536 net.cpp:91] Creating Layer pool1
+I0124 10:23:16.016932   536 net.cpp:425] pool1 <- conv1
+I0124 10:23:16.016950   536 net.cpp:399] pool1 -> pool1
+I0124 10:23:16.017004   536 net.cpp:141] Setting up pool1
+I0124 10:23:16.017014   536 net.cpp:148] Top shape: 64 20 38 38 (1848320)
+I0124 10:23:16.017017   536 net.cpp:156] Memory required for data: 41881856
+I0124 10:23:16.017021   536 layer_factory.hpp:77] Creating layer conv2
+I0124 10:23:16.017042   536 net.cpp:91] Creating Layer conv2
+I0124 10:23:16.017048   536 net.cpp:425] conv2 <- pool1
+I0124 10:23:16.017061   536 net.cpp:399] conv2 -> conv2
+I0124 10:23:16.018889   536 cudnn_conv_layer.cpp:194] Reallocating workspace storage: 32544
+I0124 10:23:16.018905   536 net.cpp:141] Setting up conv2
+I0124 10:23:16.018913   536 net.cpp:148] Top shape: 64 50 34 34 (3699200)
+I0124 10:23:16.018914   536 net.cpp:156] Memory required for data: 56678656
+I0124 10:23:16.018940   536 layer_factory.hpp:77] Creating layer pool2
+I0124 10:23:16.018955   536 net.cpp:91] Creating Layer pool2
+I0124 10:23:16.018962   536 net.cpp:425] pool2 <- conv2
+I0124 10:23:16.018975   536 net.cpp:399] pool2 -> pool2
+I0124 10:23:16.019016   536 net.cpp:141] Setting up pool2
+I0124 10:23:16.019023   536 net.cpp:148] Top shape: 64 50 17 17 (924800)
+I0124 10:23:16.019026   536 net.cpp:156] Memory required for data: 60377856
+I0124 10:23:16.019031   536 layer_factory.hpp:77] Creating layer ip1
+I0124 10:23:16.019047   536 net.cpp:91] Creating Layer ip1
+I0124 10:23:16.019053   536 net.cpp:425] ip1 <- pool2
+I0124 10:23:16.019067   536 net.cpp:399] ip1 -> ip1
+I0124 10:23:16.301545   536 net.cpp:141] Setting up ip1
+I0124 10:23:16.301578   536 net.cpp:148] Top shape: 64 500 (32000)
+I0124 10:23:16.301580   536 net.cpp:156] Memory required for data: 60505856
+I0124 10:23:16.301626   536 layer_factory.hpp:77] Creating layer relu1
+I0124 10:23:16.301656   536 net.cpp:91] Creating Layer relu1
+I0124 10:23:16.301689   536 net.cpp:425] relu1 <- ip1
+I0124 10:23:16.301713   536 net.cpp:386] relu1 -> ip1 (in-place)
+I0124 10:23:16.301906   536 net.cpp:141] Setting up relu1
+I0124 10:23:16.301914   536 net.cpp:148] Top shape: 64 500 (32000)
+I0124 10:23:16.301918   536 net.cpp:156] Memory required for data: 60633856
+I0124 10:23:16.301921   536 layer_factory.hpp:77] Creating layer ip2
+I0124 10:23:16.301946   536 net.cpp:91] Creating Layer ip2
+I0124 10:23:16.301952   536 net.cpp:425] ip2 <- ip1
+I0124 10:23:16.301966   536 net.cpp:399] ip2 -> ip2
+I0124 10:23:16.302139   536 net.cpp:141] Setting up ip2
+I0124 10:23:16.302147   536 net.cpp:148] Top shape: 64 2 (128)
+I0124 10:23:16.302150   536 net.cpp:156] Memory required for data: 60634368
+I0124 10:23:16.302158   536 layer_factory.hpp:77] Creating layer loss
+I0124 10:23:16.302186   536 net.cpp:91] Creating Layer loss
+I0124 10:23:16.302192   536 net.cpp:425] loss <- ip2
+I0124 10:23:16.302201   536 net.cpp:425] loss <- label
+I0124 10:23:16.302215   536 net.cpp:399] loss -> loss
+I0124 10:23:16.302249   536 layer_factory.hpp:77] Creating layer loss
+I0124 10:23:16.302538   536 net.cpp:141] Setting up loss
+I0124 10:23:16.302549   536 net.cpp:148] Top shape: (1)
+I0124 10:23:16.302551   536 net.cpp:151]     with loss weight 1
+I0124 10:23:16.302580   536 net.cpp:156] Memory required for data: 60634372
+I0124 10:23:16.302587   536 net.cpp:217] loss needs backward computation.
+I0124 10:23:16.302593   536 net.cpp:217] ip2 needs backward computation.
+I0124 10:23:16.302597   536 net.cpp:217] relu1 needs backward computation.
+I0124 10:23:16.302600   536 net.cpp:217] ip1 needs backward computation.
+I0124 10:23:16.302603   536 net.cpp:217] pool2 needs backward computation.
+I0124 10:23:16.302606   536 net.cpp:217] conv2 needs backward computation.
+I0124 10:23:16.302613   536 net.cpp:217] pool1 needs backward computation.
+I0124 10:23:16.302615   536 net.cpp:217] conv1 needs backward computation.
+I0124 10:23:16.302619   536 net.cpp:219] mnist does not need backward computation.
+I0124 10:23:16.302624   536 net.cpp:261] This network produces output loss
+I0124 10:23:16.302640   536 net.cpp:274] Network initialization done.
+I0124 10:23:16.302922   536 solver.cpp:181] Creating test net (#0) specified by net file: examples/pedestrain_1.4W/lenet_train_test_src.prototxt
+I0124 10:23:16.302983   536 net.cpp:313] The NetState phase (1) differed from the phase (0) specified by a rule in layer mnist
+I0124 10:23:16.303072   536 net.cpp:49] Initializing net from parameters: 
+name: "LeNet"
+state {
+  phase: TEST
+}
+layer {
+  name: "mnist"
+  type: "Data"
+  top: "data"
+  top: "label"
+  include {
+    phase: TEST
+  }
+  transform_param {
+    scale: 0.00390625
+  }
+  data_param {
+    source: "examples/pedestrain_1.4W/pedestrain_1.4W_test_lmdb"
+    batch_size: 100
+    backend: LMDB
+  }
+}
+layer {
+  name: "conv1"
+  type: "Convolution"
+  bottom: "data"
+  top: "conv1"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  convolution_param {
+    num_output: 20
+    kernel_size: 5
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "pool1"
+  type: "Pooling"
+  bottom: "conv1"
+  top: "pool1"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+layer {
+  name: "conv2"
+  type: "Convolution"
+  bottom: "pool1"
+  top: "conv2"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  convolution_param {
+    num_output: 50
+    kernel_size: 5
+    stride: 1
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "pool2"
+  type: "Pooling"
+  bottom: "conv2"
+  top: "pool2"
+  pooling_param {
+    pool: MAX
+    kernel_size: 2
+    stride: 2
+  }
+}
+layer {
+  name: "ip1"
+  type: "InnerProduct"
+  bottom: "pool2"
+  top: "ip1"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  inner_product_param {
+    num_output: 500
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "relu1"
+  type: "ReLU"
+  bottom: "ip1"
+  top: "ip1"
+}
+layer {
+  name: "ip2"
+  type: "InnerProduct"
+  bottom: "ip1"
+  top: "ip2"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  inner_product_param {
+    num_output: 2
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "accuracy"
+  type: "Accuracy"
+  bottom: "ip2"
+  bottom: "label"
+  top: "accuracy"
+  include {
+    phase: TEST
+  }
+}
+layer {
+  name: "loss"
+  type: "SoftmaxWithLoss"
+  bottom: "ip2"
+  bottom: "label"
+  top: "loss"
+}
+I0124 10:23:16.303244   536 layer_factory.hpp:77] Creating layer mnist
+I0124 10:23:16.303930   536 net.cpp:91] Creating Layer mnist
+I0124 10:23:16.303966   536 net.cpp:399] mnist -> data
+I0124 10:23:16.303992   536 net.cpp:399] mnist -> label
+I0124 10:23:16.304469   546 db_lmdb.cpp:35] Opened lmdb examples/pedestrain_1.4W/pedestrain_1.4W_test_lmdb
+I0124 10:23:16.304585   536 data_layer.cpp:41] output data size: 100,3,80,80
+I0124 10:23:16.315549   536 base_data_layer.cpp:69] Initializing prefetch
+I0124 10:23:16.316129   536 base_data_layer.cpp:72] Prefetch initialized.
+I0124 10:23:16.316149   536 net.cpp:141] Setting up mnist
+I0124 10:23:16.316172   536 net.cpp:148] Top shape: 100 3 80 80 (1920000)
+I0124 10:23:16.316177   536 net.cpp:148] Top shape: 100 (100)
+I0124 10:23:16.316198   536 net.cpp:156] Memory required for data: 7680400
+I0124 10:23:16.316217   536 layer_factory.hpp:77] Creating layer label_mnist_1_split
+I0124 10:23:16.316287   536 net.cpp:91] Creating Layer label_mnist_1_split
+I0124 10:23:16.316295   536 net.cpp:425] label_mnist_1_split <- label
+I0124 10:23:16.316315   536 net.cpp:399] label_mnist_1_split -> label_mnist_1_split_0
+I0124 10:23:16.316337   536 net.cpp:399] label_mnist_1_split -> label_mnist_1_split_1
+I0124 10:23:16.316397   536 net.cpp:141] Setting up label_mnist_1_split
+I0124 10:23:16.316406   536 net.cpp:148] Top shape: 100 (100)
+I0124 10:23:16.316421   536 net.cpp:148] Top shape: 100 (100)
+I0124 10:23:16.316423   536 net.cpp:156] Memory required for data: 7681200
+I0124 10:23:16.316427   536 layer_factory.hpp:77] Creating layer conv1
+I0124 10:23:16.316467   536 net.cpp:91] Creating Layer conv1
+I0124 10:23:16.316473   536 net.cpp:425] conv1 <- data
+I0124 10:23:16.316499   536 net.cpp:399] conv1 -> conv1
+I0124 10:23:16.318588   536 cudnn_conv_layer.cpp:194] Reallocating workspace storage: 121752
+I0124 10:23:16.318619   536 net.cpp:141] Setting up conv1
+I0124 10:23:16.318629   536 net.cpp:148] Top shape: 100 20 76 76 (11552000)
+I0124 10:23:16.318632   536 net.cpp:156] Memory required for data: 53889200
+I0124 10:23:16.318653   536 layer_factory.hpp:77] Creating layer pool1
+I0124 10:23:16.318670   536 net.cpp:91] Creating Layer pool1
+I0124 10:23:16.318675   536 net.cpp:425] pool1 <- conv1
+I0124 10:23:16.318689   536 net.cpp:399] pool1 -> pool1
+I0124 10:23:16.318753   536 net.cpp:141] Setting up pool1
+I0124 10:23:16.318760   536 net.cpp:148] Top shape: 100 20 38 38 (2888000)
+I0124 10:23:16.318763   536 net.cpp:156] Memory required for data: 65441200
+I0124 10:23:16.318768   536 layer_factory.hpp:77] Creating layer conv2
+I0124 10:23:16.318789   536 net.cpp:91] Creating Layer conv2
+I0124 10:23:16.318794   536 net.cpp:425] conv2 <- pool1
+I0124 10:23:16.318809   536 net.cpp:399] conv2 -> conv2
+I0124 10:23:16.320487   536 cudnn_conv_layer.cpp:194] Reallocating workspace storage: 32544
+I0124 10:23:16.320507   536 net.cpp:141] Setting up conv2
+I0124 10:23:16.320513   536 net.cpp:148] Top shape: 100 50 34 34 (5780000)
+I0124 10:23:16.320518   536 net.cpp:156] Memory required for data: 88561200
+I0124 10:23:16.320533   536 layer_factory.hpp:77] Creating layer pool2
+I0124 10:23:16.320545   536 net.cpp:91] Creating Layer pool2
+I0124 10:23:16.320554   536 net.cpp:425] pool2 <- conv2
+I0124 10:23:16.320566   536 net.cpp:399] pool2 -> pool2
+I0124 10:23:16.320607   536 net.cpp:141] Setting up pool2
+I0124 10:23:16.320616   536 net.cpp:148] Top shape: 100 50 17 17 (1445000)
+I0124 10:23:16.320618   536 net.cpp:156] Memory required for data: 94341200
+I0124 10:23:16.320622   536 layer_factory.hpp:77] Creating layer ip1
+I0124 10:23:16.320636   536 net.cpp:91] Creating Layer ip1
+I0124 10:23:16.320642   536 net.cpp:425] ip1 <- pool2
+I0124 10:23:16.320657   536 net.cpp:399] ip1 -> ip1
+I0124 10:23:16.328341   547 data_layer.cpp:102] Prefetch batch: 11 ms.
+I0124 10:23:16.328368   547 data_layer.cpp:103]      Read time: 0.101 ms.
+I0124 10:23:16.328373   547 data_layer.cpp:104] Transform time: 9.802 ms.
+I0124 10:23:16.340859   547 data_layer.cpp:102] Prefetch batch: 11 ms.
+I0124 10:23:16.340878   547 data_layer.cpp:103]      Read time: 0.103 ms.
+I0124 10:23:16.340883   547 data_layer.cpp:104] Transform time: 9.622 ms.
+I0124 10:23:16.353106   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:16.353123   547 data_layer.cpp:103]      Read time: 0.098 ms.
+I0124 10:23:16.353127   547 data_layer.cpp:104] Transform time: 9.437 ms.
+I0124 10:23:16.603705   536 net.cpp:141] Setting up ip1
+I0124 10:23:16.603736   536 net.cpp:148] Top shape: 100 500 (50000)
+I0124 10:23:16.603740   536 net.cpp:156] Memory required for data: 94541200
+I0124 10:23:16.603785   536 layer_factory.hpp:77] Creating layer relu1
+I0124 10:23:16.603819   536 net.cpp:91] Creating Layer relu1
+I0124 10:23:16.603838   536 net.cpp:425] relu1 <- ip1
+I0124 10:23:16.603863   536 net.cpp:386] relu1 -> ip1 (in-place)
+I0124 10:23:16.604221   536 net.cpp:141] Setting up relu1
+I0124 10:23:16.604230   536 net.cpp:148] Top shape: 100 500 (50000)
+I0124 10:23:16.604233   536 net.cpp:156] Memory required for data: 94741200
+I0124 10:23:16.604238   536 layer_factory.hpp:77] Creating layer ip2
+I0124 10:23:16.604269   536 net.cpp:91] Creating Layer ip2
+I0124 10:23:16.604275   536 net.cpp:425] ip2 <- ip1
+I0124 10:23:16.604290   536 net.cpp:399] ip2 -> ip2
+I0124 10:23:16.604465   536 net.cpp:141] Setting up ip2
+I0124 10:23:16.604475   536 net.cpp:148] Top shape: 100 2 (200)
+I0124 10:23:16.604477   536 net.cpp:156] Memory required for data: 94742000
+I0124 10:23:16.604485   536 layer_factory.hpp:77] Creating layer ip2_ip2_0_split
+I0124 10:23:16.604504   536 net.cpp:91] Creating Layer ip2_ip2_0_split
+I0124 10:23:16.604508   536 net.cpp:425] ip2_ip2_0_split <- ip2
+I0124 10:23:16.604518   536 net.cpp:399] ip2_ip2_0_split -> ip2_ip2_0_split_0
+I0124 10:23:16.604531   536 net.cpp:399] ip2_ip2_0_split -> ip2_ip2_0_split_1
+I0124 10:23:16.604573   536 net.cpp:141] Setting up ip2_ip2_0_split
+I0124 10:23:16.604580   536 net.cpp:148] Top shape: 100 2 (200)
+I0124 10:23:16.604594   536 net.cpp:148] Top shape: 100 2 (200)
+I0124 10:23:16.604596   536 net.cpp:156] Memory required for data: 94743600
+I0124 10:23:16.604600   536 layer_factory.hpp:77] Creating layer accuracy
+I0124 10:23:16.604614   536 net.cpp:91] Creating Layer accuracy
+I0124 10:23:16.604620   536 net.cpp:425] accuracy <- ip2_ip2_0_split_0
+I0124 10:23:16.604629   536 net.cpp:425] accuracy <- label_mnist_1_split_0
+I0124 10:23:16.604638   536 net.cpp:399] accuracy -> accuracy
+I0124 10:23:16.604655   536 net.cpp:141] Setting up accuracy
+I0124 10:23:16.604660   536 net.cpp:148] Top shape: (1)
+I0124 10:23:16.604663   536 net.cpp:156] Memory required for data: 94743604
+I0124 10:23:16.604666   536 layer_factory.hpp:77] Creating layer loss
+I0124 10:23:16.604676   536 net.cpp:91] Creating Layer loss
+I0124 10:23:16.604681   536 net.cpp:425] loss <- ip2_ip2_0_split_1
+I0124 10:23:16.604691   536 net.cpp:425] loss <- label_mnist_1_split_1
+I0124 10:23:16.604698   536 net.cpp:399] loss -> loss
+I0124 10:23:16.604712   536 layer_factory.hpp:77] Creating layer loss
+I0124 10:23:16.604895   536 net.cpp:141] Setting up loss
+I0124 10:23:16.604904   536 net.cpp:148] Top shape: (1)
+I0124 10:23:16.604907   536 net.cpp:151]     with loss weight 1
+I0124 10:23:16.604914   536 net.cpp:156] Memory required for data: 94743608
+I0124 10:23:16.604919   536 net.cpp:217] loss needs backward computation.
+I0124 10:23:16.604924   536 net.cpp:219] accuracy does not need backward computation.
+I0124 10:23:16.604929   536 net.cpp:217] ip2_ip2_0_split needs backward computation.
+I0124 10:23:16.604933   536 net.cpp:217] ip2 needs backward computation.
+I0124 10:23:16.604938   536 net.cpp:217] relu1 needs backward computation.
+I0124 10:23:16.604940   536 net.cpp:217] ip1 needs backward computation.
+I0124 10:23:16.604943   536 net.cpp:217] pool2 needs backward computation.
+I0124 10:23:16.604946   536 net.cpp:217] conv2 needs backward computation.
+I0124 10:23:16.604950   536 net.cpp:217] pool1 needs backward computation.
+I0124 10:23:16.604954   536 net.cpp:217] conv1 needs backward computation.
+I0124 10:23:16.604959   536 net.cpp:219] label_mnist_1_split does not need backward computation.
+I0124 10:23:16.604964   536 net.cpp:219] mnist does not need backward computation.
+I0124 10:23:16.604967   536 net.cpp:261] This network produces output accuracy
+I0124 10:23:16.604974   536 net.cpp:261] This network produces output loss
+I0124 10:23:16.604989   536 net.cpp:274] Network initialization done.
+I0124 10:23:16.605039   536 solver.cpp:60] Solver scaffolding done.
+I0124 10:23:16.605262   536 caffe.cpp:219] Starting Optimization
+I0124 10:23:16.605268   536 solver.cpp:334] Solving LeNet
+I0124 10:23:16.605270   536 solver.cpp:335] Learning Rate Policy: inv
+I0124 10:23:16.605649   536 solver.cpp:392] Iteration 0, Testing net (#0)
+I0124 10:23:16.605661   536 net.cpp:687] Copying source layer mnist
+I0124 10:23:16.605665   536 net.cpp:687] Copying source layer conv1
+I0124 10:23:16.605979   536 net.cpp:687] Copying source layer pool1
+I0124 10:23:16.605984   536 net.cpp:687] Copying source layer conv2
+I0124 10:23:16.606014   536 net.cpp:687] Copying source layer pool2
+I0124 10:23:16.606017   536 net.cpp:687] Copying source layer ip1
+I0124 10:23:16.608296   536 net.cpp:687] Copying source layer relu1
+I0124 10:23:16.608304   536 net.cpp:687] Copying source layer ip2
+I0124 10:23:16.608324   536 net.cpp:687] Copying source layer loss
+I0124 10:23:16.619390   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:16.619410   547 data_layer.cpp:103]      Read time: 0.097 ms.
+I0124 10:23:16.619423   547 data_layer.cpp:104] Transform time: 10.336 ms.
+I0124 10:23:16.646668   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:16.646704   547 data_layer.cpp:103]      Read time: 0.094 ms.
+I0124 10:23:16.646709   547 data_layer.cpp:104] Transform time: 9.95 ms.
+I0124 10:23:16.669323   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:16.669348   547 data_layer.cpp:103]      Read time: 0.099 ms.
+I0124 10:23:16.669353   547 data_layer.cpp:104] Transform time: 10.103 ms.
+I0124 10:23:16.692499   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:16.692522   547 data_layer.cpp:103]      Read time: 0.091 ms.
+I0124 10:23:16.692528   547 data_layer.cpp:104] Transform time: 9.821 ms.
+I0124 10:23:16.715811   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:16.715836   547 data_layer.cpp:103]      Read time: 0.092 ms.
+I0124 10:23:16.715842   547 data_layer.cpp:104] Transform time: 9.712 ms.
+I0124 10:23:16.739661   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:16.739684   547 data_layer.cpp:103]      Read time: 0.096 ms.
+I0124 10:23:16.739691   547 data_layer.cpp:104] Transform time: 10.236 ms.
+I0124 10:23:16.761442   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:16.761464   547 data_layer.cpp:103]      Read time: 0.094 ms.
+I0124 10:23:16.761471   547 data_layer.cpp:104] Transform time: 10.108 ms.
+I0124 10:23:16.782927   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:16.782950   547 data_layer.cpp:103]      Read time: 0.096 ms.
+I0124 10:23:16.782958   547 data_layer.cpp:104] Transform time: 9.953 ms.
+I0124 10:23:16.804668   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:16.804692   547 data_layer.cpp:103]      Read time: 0.092 ms.
+I0124 10:23:16.804697   547 data_layer.cpp:104] Transform time: 10.111 ms.
+I0124 10:23:16.825783   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:16.825806   547 data_layer.cpp:103]      Read time: 0.09 ms.
+I0124 10:23:16.825812   547 data_layer.cpp:104] Transform time: 9.92 ms.
+I0124 10:23:16.846951   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:16.846976   547 data_layer.cpp:103]      Read time: 0.103 ms.
+I0124 10:23:16.846992   547 data_layer.cpp:104] Transform time: 9.98 ms.
+I0124 10:23:16.868515   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:16.868538   547 data_layer.cpp:103]      Read time: 0.088 ms.
+I0124 10:23:16.868544   547 data_layer.cpp:104] Transform time: 9.839 ms.
+I0124 10:23:16.889984   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:16.890007   547 data_layer.cpp:103]      Read time: 0.095 ms.
+I0124 10:23:16.890013   547 data_layer.cpp:104] Transform time: 10.014 ms.
+I0124 10:23:16.910611   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:16.910635   547 data_layer.cpp:103]      Read time: 0.092 ms.
+I0124 10:23:16.910641   547 data_layer.cpp:104] Transform time: 9.948 ms.
+I0124 10:23:16.931792   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:16.931814   547 data_layer.cpp:103]      Read time: 0.095 ms.
+I0124 10:23:16.931819   547 data_layer.cpp:104] Transform time: 9.928 ms.
+I0124 10:23:16.951817   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:16.951840   547 data_layer.cpp:103]      Read time: 0.089 ms.
+I0124 10:23:16.951845   547 data_layer.cpp:104] Transform time: 9.806 ms.
+I0124 10:23:16.971346   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:16.971366   547 data_layer.cpp:103]      Read time: 0.094 ms.
+I0124 10:23:16.971400   547 data_layer.cpp:104] Transform time: 9.759 ms.
+I0124 10:23:16.991745   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:16.991765   547 data_layer.cpp:103]      Read time: 0.086 ms.
+I0124 10:23:16.991771   547 data_layer.cpp:104] Transform time: 9.812 ms.
+I0124 10:23:17.012056   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.012079   547 data_layer.cpp:103]      Read time: 0.09 ms.
+I0124 10:23:17.012084   547 data_layer.cpp:104] Transform time: 9.974 ms.
+I0124 10:23:17.031776   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.031808   547 data_layer.cpp:103]      Read time: 0.099 ms.
+I0124 10:23:17.031816   547 data_layer.cpp:104] Transform time: 10.1 ms.
+I0124 10:23:17.052012   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.052037   547 data_layer.cpp:103]      Read time: 0.094 ms.
+I0124 10:23:17.052042   547 data_layer.cpp:104] Transform time: 9.953 ms.
+I0124 10:23:17.071475   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.071497   547 data_layer.cpp:103]      Read time: 0.09 ms.
+I0124 10:23:17.071503   547 data_layer.cpp:104] Transform time: 9.741 ms.
+I0124 10:23:17.091917   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.091936   547 data_layer.cpp:103]      Read time: 0.092 ms.
+I0124 10:23:17.091943   547 data_layer.cpp:104] Transform time: 10.305 ms.
+I0124 10:23:17.111917   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.111941   547 data_layer.cpp:103]      Read time: 0.096 ms.
+I0124 10:23:17.111948   547 data_layer.cpp:104] Transform time: 9.795 ms.
+I0124 10:23:17.132380   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.132402   547 data_layer.cpp:103]      Read time: 0.085 ms.
+I0124 10:23:17.132407   547 data_layer.cpp:104] Transform time: 10.267 ms.
+I0124 10:23:17.152017   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.152039   547 data_layer.cpp:103]      Read time: 0.094 ms.
+I0124 10:23:17.152043   547 data_layer.cpp:104] Transform time: 9.958 ms.
+I0124 10:23:17.172631   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.172653   547 data_layer.cpp:103]      Read time: 0.104 ms.
+I0124 10:23:17.172658   547 data_layer.cpp:104] Transform time: 10.174 ms.
+I0124 10:23:17.192762   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.192783   547 data_layer.cpp:103]      Read time: 0.087 ms.
+I0124 10:23:17.192790   547 data_layer.cpp:104] Transform time: 10.228 ms.
+I0124 10:23:17.212551   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.212571   547 data_layer.cpp:103]      Read time: 0.091 ms.
+I0124 10:23:17.212577   547 data_layer.cpp:104] Transform time: 10.026 ms.
+I0124 10:23:17.232867   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.232889   547 data_layer.cpp:103]      Read time: 0.092 ms.
+I0124 10:23:17.232895   547 data_layer.cpp:104] Transform time: 9.927 ms.
+I0124 10:23:17.253258   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.253283   547 data_layer.cpp:103]      Read time: 0.099 ms.
+I0124 10:23:17.253298   547 data_layer.cpp:104] Transform time: 10.193 ms.
+I0124 10:23:17.273084   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.273105   547 data_layer.cpp:103]      Read time: 0.097 ms.
+I0124 10:23:17.273110   547 data_layer.cpp:104] Transform time: 10.111 ms.
+I0124 10:23:17.293128   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.293150   547 data_layer.cpp:103]      Read time: 0.089 ms.
+I0124 10:23:17.293156   547 data_layer.cpp:104] Transform time: 9.966 ms.
+I0124 10:23:17.312127   547 data_layer.cpp:102] Prefetch batch: 9 ms.
+I0124 10:23:17.312150   547 data_layer.cpp:103]      Read time: 0.092 ms.
+I0124 10:23:17.312156   547 data_layer.cpp:104] Transform time: 9.454 ms.
+I0124 10:23:17.333164   546 data_reader.cpp:114] Restarting data prefetching from start.
+I0124 10:23:17.333153   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.333189   547 data_layer.cpp:103]      Read time: 0.092 ms.
+I0124 10:23:17.333195   547 data_layer.cpp:104] Transform time: 10.006 ms.
+I0124 10:23:17.353039   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.353062   547 data_layer.cpp:103]      Read time: 0.089 ms.
+I0124 10:23:17.353066   547 data_layer.cpp:104] Transform time: 9.763 ms.
+I0124 10:23:17.372575   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.372594   547 data_layer.cpp:103]      Read time: 0.098 ms.
+I0124 10:23:17.372608   547 data_layer.cpp:104] Transform time: 9.761 ms.
+I0124 10:23:17.393149   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.393168   547 data_layer.cpp:103]      Read time: 0.086 ms.
+I0124 10:23:17.393182   547 data_layer.cpp:104] Transform time: 9.992 ms.
+I0124 10:23:17.413550   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.413584   547 data_layer.cpp:103]      Read time: 0.096 ms.
+I0124 10:23:17.413589   547 data_layer.cpp:104] Transform time: 9.897 ms.
+I0124 10:23:17.432651   547 data_layer.cpp:102] Prefetch batch: 9 ms.
+I0124 10:23:17.432683   547 data_layer.cpp:103]      Read time: 0.098 ms.
+I0124 10:23:17.432687   547 data_layer.cpp:104] Transform time: 9.511 ms.
+I0124 10:23:17.453382   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.453402   547 data_layer.cpp:103]      Read time: 0.093 ms.
+I0124 10:23:17.453415   547 data_layer.cpp:104] Transform time: 9.834 ms.
+I0124 10:23:17.473363   547 data_layer.cpp:102] Prefetch batch: 9 ms.
+I0124 10:23:17.473384   547 data_layer.cpp:103]      Read time: 0.1 ms.
+I0124 10:23:17.473399   547 data_layer.cpp:104] Transform time: 9.477 ms.
+I0124 10:23:17.493259   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.493279   547 data_layer.cpp:103]      Read time: 0.104 ms.
+I0124 10:23:17.493294   547 data_layer.cpp:104] Transform time: 9.785 ms.
+I0124 10:23:17.513689   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.513711   547 data_layer.cpp:103]      Read time: 0.089 ms.
+I0124 10:23:17.513725   547 data_layer.cpp:104] Transform time: 9.759 ms.
+I0124 10:23:17.534329   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.534363   547 data_layer.cpp:103]      Read time: 0.096 ms.
+I0124 10:23:17.534368   547 data_layer.cpp:104] Transform time: 10.008 ms.
+I0124 10:23:17.553573   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.553596   547 data_layer.cpp:103]      Read time: 0.093 ms.
+I0124 10:23:17.553609   547 data_layer.cpp:104] Transform time: 9.661 ms.
+I0124 10:23:17.574014   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.574036   547 data_layer.cpp:103]      Read time: 0.094 ms.
+I0124 10:23:17.574051   547 data_layer.cpp:104] Transform time: 9.757 ms.
+I0124 10:23:17.594626   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.594660   547 data_layer.cpp:103]      Read time: 0.091 ms.
+I0124 10:23:17.594665   547 data_layer.cpp:104] Transform time: 9.906 ms.
+I0124 10:23:17.614183   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.614205   547 data_layer.cpp:103]      Read time: 0.092 ms.
+I0124 10:23:17.614210   547 data_layer.cpp:104] Transform time: 9.933 ms.
+I0124 10:23:17.634573   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.634595   547 data_layer.cpp:103]      Read time: 0.091 ms.
+I0124 10:23:17.634600   547 data_layer.cpp:104] Transform time: 9.825 ms.
+I0124 10:23:17.654845   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.654868   547 data_layer.cpp:103]      Read time: 0.09 ms.
+I0124 10:23:17.654872   547 data_layer.cpp:104] Transform time: 9.922 ms.
+I0124 10:23:17.674376   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.674396   547 data_layer.cpp:103]      Read time: 0.098 ms.
+I0124 10:23:17.674399   547 data_layer.cpp:104] Transform time: 9.844 ms.
+I0124 10:23:17.694905   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.694924   547 data_layer.cpp:103]      Read time: 0.086 ms.
+I0124 10:23:17.694928   547 data_layer.cpp:104] Transform time: 10.024 ms.
+I0124 10:23:17.714830   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.714854   547 data_layer.cpp:103]      Read time: 0.086 ms.
+I0124 10:23:17.714887   547 data_layer.cpp:104] Transform time: 9.844 ms.
+I0124 10:23:17.734541   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.734562   547 data_layer.cpp:103]      Read time: 0.091 ms.
+I0124 10:23:17.734565   547 data_layer.cpp:104] Transform time: 9.954 ms.
+I0124 10:23:17.754824   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.754847   547 data_layer.cpp:103]      Read time: 0.094 ms.
+I0124 10:23:17.754850   547 data_layer.cpp:104] Transform time: 9.901 ms.
+I0124 10:23:17.774732   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.774754   547 data_layer.cpp:103]      Read time: 0.093 ms.
+I0124 10:23:17.774757   547 data_layer.cpp:104] Transform time: 10.089 ms.
+I0124 10:23:17.794630   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.794658   547 data_layer.cpp:103]      Read time: 0.096 ms.
+I0124 10:23:17.794661   547 data_layer.cpp:104] Transform time: 10.145 ms.
+I0124 10:23:17.815109   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.815132   547 data_layer.cpp:103]      Read time: 0.09 ms.
+I0124 10:23:17.815136   547 data_layer.cpp:104] Transform time: 10.137 ms.
+I0124 10:23:17.834084   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.834115   547 data_layer.cpp:103]      Read time: 0.096 ms.
+I0124 10:23:17.834118   547 data_layer.cpp:104] Transform time: 9.8 ms.
+I0124 10:23:17.854751   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.854781   547 data_layer.cpp:103]      Read time: 0.093 ms.
+I0124 10:23:17.854785   547 data_layer.cpp:104] Transform time: 10.01 ms.
+I0124 10:23:17.875206   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.875227   547 data_layer.cpp:103]      Read time: 0.092 ms.
+I0124 10:23:17.875231   547 data_layer.cpp:104] Transform time: 10.097 ms.
+I0124 10:23:17.894464   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.894496   547 data_layer.cpp:103]      Read time: 0.091 ms.
+I0124 10:23:17.894501   547 data_layer.cpp:104] Transform time: 9.779 ms.
+I0124 10:23:17.914911   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.914932   547 data_layer.cpp:103]      Read time: 0.091 ms.
+I0124 10:23:17.914947   547 data_layer.cpp:104] Transform time: 9.758 ms.
+I0124 10:23:17.935533   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.935567   547 data_layer.cpp:103]      Read time: 0.093 ms.
+I0124 10:23:17.935572   547 data_layer.cpp:104] Transform time: 9.955 ms.
+I0124 10:23:17.954660   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.954681   547 data_layer.cpp:103]      Read time: 0.09 ms.
+I0124 10:23:17.954685   547 data_layer.cpp:104] Transform time: 9.689 ms.
+I0124 10:23:17.974743   547 data_layer.cpp:102] Prefetch batch: 9 ms.
+I0124 10:23:17.974762   547 data_layer.cpp:103]      Read time: 0.094 ms.
+I0124 10:23:17.974766   547 data_layer.cpp:104] Transform time: 9.391 ms.
+I0124 10:23:17.995821   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:17.995843   547 data_layer.cpp:103]      Read time: 0.082 ms.
+I0124 10:23:17.995846   547 data_layer.cpp:104] Transform time: 9.952 ms.
+I0124 10:23:18.015581   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:18.015604   547 data_layer.cpp:103]      Read time: 0.095 ms.
+I0124 10:23:18.015609   547 data_layer.cpp:104] Transform time: 10.217 ms.
+I0124 10:23:18.035904   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:18.035926   547 data_layer.cpp:103]      Read time: 0.086 ms.
+I0124 10:23:18.035931   547 data_layer.cpp:104] Transform time: 10.004 ms.
+I0124 10:23:18.056372   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:18.056394   547 data_layer.cpp:103]      Read time: 0.093 ms.
+I0124 10:23:18.056398   547 data_layer.cpp:104] Transform time: 10.082 ms.
+I0124 10:23:18.075659   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:18.075678   547 data_layer.cpp:103]      Read time: 0.108 ms.
+I0124 10:23:18.075682   547 data_layer.cpp:104] Transform time: 9.738 ms.
+I0124 10:23:18.096159   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:18.096195   547 data_layer.cpp:103]      Read time: 0.085 ms.
+I0124 10:23:18.096200   547 data_layer.cpp:104] Transform time: 9.801 ms.
+I0124 10:23:18.116540   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:18.116564   547 data_layer.cpp:103]      Read time: 0.088 ms.
+I0124 10:23:18.116567   547 data_layer.cpp:104] Transform time: 9.772 ms.
+I0124 10:23:18.136168   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:18.136189   547 data_layer.cpp:103]      Read time: 0.105 ms.
+I0124 10:23:18.136193   547 data_layer.cpp:104] Transform time: 9.782 ms.
+I0124 10:23:18.156951   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:18.156970   547 data_layer.cpp:103]      Read time: 0.094 ms.
+I0124 10:23:18.156973   547 data_layer.cpp:104] Transform time: 10.116 ms.
+I0124 10:23:18.177119   546 data_reader.cpp:114] Restarting data prefetching from start.
+I0124 10:23:18.177119   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:18.177155   547 data_layer.cpp:103]      Read time: 0.089 ms.
+I0124 10:23:18.177160   547 data_layer.cpp:104] Transform time: 9.864 ms.
+I0124 10:23:18.196542   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:18.196562   547 data_layer.cpp:103]      Read time: 0.093 ms.
+I0124 10:23:18.196566   547 data_layer.cpp:104] Transform time: 9.783 ms.
+I0124 10:23:18.217054   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:18.217073   547 data_layer.cpp:103]      Read time: 0.091 ms.
+I0124 10:23:18.217077   547 data_layer.cpp:104] Transform time: 9.861 ms.
+I0124 10:23:18.237365   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:18.237385   547 data_layer.cpp:103]      Read time: 0.094 ms.
+I0124 10:23:18.237390   547 data_layer.cpp:104] Transform time: 9.888 ms.
+I0124 10:23:18.256996   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:18.257017   547 data_layer.cpp:103]      Read time: 0.097 ms.
+I0124 10:23:18.257020   547 data_layer.cpp:104] Transform time: 9.93 ms.
+I0124 10:23:18.277269   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:18.277289   547 data_layer.cpp:103]      Read time: 0.093 ms.
+I0124 10:23:18.277292   547 data_layer.cpp:104] Transform time: 9.913 ms.
+I0124 10:23:18.297552   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:18.297576   547 data_layer.cpp:103]      Read time: 0.092 ms.
+I0124 10:23:18.297580   547 data_layer.cpp:104] Transform time: 9.83 ms.
+I0124 10:23:18.317438   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:18.317459   547 data_layer.cpp:103]      Read time: 0.096 ms.
+I0124 10:23:18.317463   547 data_layer.cpp:104] Transform time: 10.096 ms.
+I0124 10:23:18.337960   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:18.337980   547 data_layer.cpp:103]      Read time: 0.107 ms.
+I0124 10:23:18.337983   547 data_layer.cpp:104] Transform time: 10.184 ms.
+I0124 10:23:18.358016   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:18.358036   547 data_layer.cpp:103]      Read time: 0.085 ms.
+I0124 10:23:18.358052   547 data_layer.cpp:104] Transform time: 9.898 ms.
+I0124 10:23:18.377507   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:18.377529   547 data_layer.cpp:103]      Read time: 0.099 ms.
+I0124 10:23:18.377533   547 data_layer.cpp:104] Transform time: 10.048 ms.
+I0124 10:23:18.397804   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:18.397825   547 data_layer.cpp:103]      Read time: 0.092 ms.
+I0124 10:23:18.397828   547 data_layer.cpp:104] Transform time: 9.903 ms.
+I0124 10:23:18.418040   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:18.418066   547 data_layer.cpp:103]      Read time: 0.096 ms.
+I0124 10:23:18.418069   547 data_layer.cpp:104] Transform time: 9.944 ms.
+I0124 10:23:18.437556   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:18.437577   547 data_layer.cpp:103]      Read time: 0.095 ms.
+I0124 10:23:18.437580   547 data_layer.cpp:104] Transform time: 9.898 ms.
+I0124 10:23:18.457854   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:18.457871   547 data_layer.cpp:103]      Read time: 0.09 ms.
+I0124 10:23:18.457892   547 data_layer.cpp:104] Transform time: 9.813 ms.
+I0124 10:23:18.478111   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:18.478134   547 data_layer.cpp:103]      Read time: 0.088 ms.
+I0124 10:23:18.478138   547 data_layer.cpp:104] Transform time: 9.94 ms.
+I0124 10:23:18.497913   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:18.497943   547 data_layer.cpp:103]      Read time: 0.097 ms.
+I0124 10:23:18.497947   547 data_layer.cpp:104] Transform time: 10.085 ms.
+I0124 10:23:18.518144   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:18.518165   547 data_layer.cpp:103]      Read time: 0.087 ms.
+I0124 10:23:18.518180   547 data_layer.cpp:104] Transform time: 9.806 ms.
+I0124 10:23:18.538347   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:18.538367   547 data_layer.cpp:103]      Read time: 0.088 ms.
+I0124 10:23:18.538381   547 data_layer.cpp:104] Transform time: 9.822 ms.
+I0124 10:23:18.558017   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:18.558038   547 data_layer.cpp:103]      Read time: 0.085 ms.
+I0124 10:23:18.558043   547 data_layer.cpp:104] Transform time: 9.906 ms.
+I0124 10:23:18.578486   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:18.578507   547 data_layer.cpp:103]      Read time: 0.092 ms.
+I0124 10:23:18.578522   547 data_layer.cpp:104] Transform time: 9.887 ms.
+I0124 10:23:18.598685   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:18.598719   547 data_layer.cpp:103]      Read time: 0.088 ms.
+I0124 10:23:18.598723   547 data_layer.cpp:104] Transform time: 9.909 ms.
+I0124 10:23:18.618176   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:18.618199   547 data_layer.cpp:103]      Read time: 0.091 ms.
+I0124 10:23:18.618206   547 data_layer.cpp:104] Transform time: 9.778 ms.
+I0124 10:23:18.638533   547 data_layer.cpp:102] Prefetch batch: 10 ms.
+I0124 10:23:18.638555   547 data_layer.cpp:103]      Read time: 0.09 ms.
+I0124 10:23:18.638561   547 data_layer.cpp:104] Transform time: 9.758 ms.
+I0124 10:23:18.647933   536 solver.cpp:459]     Test net output #0: accuracy = 0.4429
+I0124 10:23:18.647960   536 solver.cpp:459]     Test net output #1: loss = 0.708559 (* 1 = 0.708559 loss)
+I0124 10:23:18.654618   545 data_layer.cpp:102] Prefetch batch: 6 ms.
+I0124 10:23:18.654634   545 data_layer.cpp:103]      Read time: 0.058 ms.
+I0124 10:23:18.654640   545 data_layer.cpp:104] Transform time: 5.969 ms.
+I0124 10:23:18.662211   536 solver.cpp:228] Iteration 0, loss = 0.687066
+I0124 10:23:18.662230   536 solver.cpp:244]     Train net output ###0: loss = 0.687066 (* 1 = 0.687066 loss)
+I0124 10:23:18.707592   536 solver.cpp:272] conv1  bottom_blob 0: 3.865552e-01 [0.000000e+00]
+I0124 10:23:18.708066   536 solver.cpp:272] pool1  bottom_blob 0: 3.080574e-01 [9.089480e-06]
+I0124 10:23:18.708220   536 solver.cpp:272] conv2  bottom_blob 0: 3.050663e-01 [3.635792e-05]
+I0124 10:23:18.708464   536 solver.cpp:272] pool2  bottom_blob 0: 2.946607e-01 [1.311021e-05]
+I0124 10:23:18.708573   536 solver.cpp:272] ip1    bottom_blob 0: 3.055121e-01 [5.244084e-05]
+I0124 10:23:18.708638   536 solver.cpp:272] relu1  bottom_blob 0: 1.707556e-01 [2.113985e-04]
+I0124 10:23:18.708705   536 solver.cpp:272] ip2    bottom_blob 0: 1.707556e-01 [2.113985e-04]
+I0124 10:23:18.708780   536 solver.cpp:272] loss   bottom_blob 0: 9.917788e-02 [7.739276e-03]
+I0124 10:23:18.708817   536 solver.cpp:272] loss   bottom_blob 1: 5.468750e-01 [0.000000e+00]
+I0124 10:23:18.708822   536 solver.cpp:279] 
+I0124 10:23:18.708886   536 solver.cpp:298] conv1  param_blob 0: 9.811457e-02 [7.558459e-03]
+I0124 10:23:18.708931   536 solver.cpp:298] conv1  param_blob 1: 0.000000e+00 [1.815657e-02]
+I0124 10:23:18.709203   536 solver.cpp:298] conv2  param_blob 0: 3.891301e-02 [2.983268e-03]
+I0124 10:23:18.709246   536 solver.cpp:298] conv2  param_blob 1: 0.000000e+00 [9.751473e-03]
+I0124 10:23:18.782116   536 solver.cpp:298] ip1    param_blob 0: 7.179858e-03 [6.943663e-04]
+I0124 10:23:18.782239   536 solver.cpp:298] ip1    param_blob 1: 0.000000e+00 [2.209477e-03]
+I0124 10:23:18.782327   536 solver.cpp:298] ip2    param_blob 0: 3.799596e-02 [1.264064e-02]
+I0124 10:23:18.782418   536 solver.cpp:298] ip2    param_blob 1: 0.000000e+00 [7.211950e-02]
+I0124 10:23:18.782446   536 sgd_solver.cpp:106] Iteration 0, lr = 0.01
+I0124 10:23:18.792289   545 data_layer.cpp:102] Prefetch batch: 6 ms.
+I0124 10:23:18.792302   545 data_layer.cpp:103]      Read time: 0.056 ms.
+I0124 10:23:18.792307   545 data_layer.cpp:104] Transform time: 6.225 ms.
+I0124 10:23:18.853528   545 data_layer.cpp:102] Prefetch batch: 6 ms.
+I0124 10:23:18.853548   545 data_layer.cpp:103]      Read time: 0.052 ms.
+I0124 10:23:18.853554   545 data_layer.cpp:104] Transform time: 6.186 ms.
+I0124 10:23:18.914369   545 data_layer.cpp:102] Prefetch batch: 6 ms.
+I0124 10:23:18.914388   545 data_layer.cpp:103]      Read time: 0.054 ms.
+I0124 10:23:18.914394   545 data_layer.cpp:104] Transform time: 6.145 ms.
+I0124 10:23:18.975332   545 data_layer.cpp:102] Prefetch batch: 6 ms.
+I0124 10:23:18.975352   545 data_layer.cpp:103]      Read time: 0.053 ms.
+I0124 10:23:18.975356   545 data_layer.cpp:104] Transform time: 6.163 ms.
+I0124 10:23:19.036622   545 data_layer.cpp:102] Prefetch batch: 6 ms.
+I0124 10:23:19.036639   545 data_layer.cpp:103]      Read time: 0.051 ms.
+I0124 10:23:19.036644   545 data_layer.cpp:104] Transform time: 6.22 ms.
+I0124 10:23:19.097559   545 data_layer.cpp:102] Prefetch batch: 6 ms.
+I0124 10:23:19.097578   545 data_layer.cpp:103]      Read time: 0.06 ms.
+I0124 10:23:19.097584   545 data_layer.cpp:104] Transform time: 6.198 ms.
+I0124 10:23:19.158787   545 data_layer.cpp:102] Prefetch batch: 6 ms.
+I0124 10:23:19.158807   545 data_layer.cpp:103]      Read time: 0.063 ms.
+I0124 10:23:19.158814   545 data_layer.cpp:104] Transform time: 6.348 ms.
+I0124 10:23:19.219535   545 data_layer.cpp:102] Prefetch batch: 6 ms.
+I0124 10:23:19.219553   545 data_layer.cpp:103]      Read time: 0.057 ms.
+I0124 10:23:19.219558   545 data_layer.cpp:104] Transform time: 6.16 ms.
+I0124 10:23:19.280447   545 data_layer.cpp:102] Prefetch batch: 6 ms.
+I0124 10:23:19.280465   545 data_layer.cpp:103]      Read time: 0.051 ms.
+I0124 10:23:19.280470   545 data_layer.cpp:104] Transform time: 6.175 ms.
+I0124 10:23:19.341518   545 data_layer.cpp:102] Prefetch batch: 6 ms.
+I0124 10:23:19.341537   545 data_layer.cpp:103]      Read time: 0.057 ms.
+I0124 10:23:19.341543   545 data_layer.cpp:104] Transform time: 6.204 ms.
+I0124 10:23:19.402813   545 data_layer.cpp:102] Prefetch batch: 6 ms.
+I0124 10:23:19.402833   545 data_layer.cpp:103]      Read time: 0.063 ms.
+I0124 10:23:19.402839   545 data_layer.cpp:104] Transform time: 6.167 ms.
+I0124 10:23:19.463739   545 data_layer.cpp:102] Prefetch batch: 6 ms.
+I0124 10:23:19.463759   545 data_layer.cpp:103]      Read time: 0.061 ms.
+I0124 10:23:19.463764   545 data_layer.cpp:104] Transform time: 6.156 ms.
+I0124 10:23:19.524778   545 data_layer.cpp:102] Prefetch batch: 6 ms.
+I0124 10:23:19.524797   545 data_layer.cpp:103]      Read time: 0.053 ms.
+I0124 10:23:19.524803   545 data_layer.cpp:104] Transform time: 6.201 ms.
+I0124 10:23:19.585749   545 data_layer.cpp:102] Prefetch batch: 6 ms.
+I0124 10:23:19.585769   545 data_layer.cpp:103]      Read time: 0.056 ms.
+I0124 10:23:19.585774   545 data_layer.cpp:104] Transform time: 6.193 ms.
+I0124 10:23:19.646556   545 data_layer.cpp:102] Prefetch batch: 6 ms.
+I0124 10:23:19.646575   545 data_layer.cpp:103]      Read time: 0.056 ms.
+I0124 10:23:19.646581   545 data_layer.cpp:104] Transform time: 6.131 ms.
+I0124 10:23:19.707602   545 data_layer.cpp:102] Prefetch batch: 6 ms.
+I0124 10:23:19.707620   545 data_layer.cpp:103]      Read time: 0.053 ms.
+I0124 10:23:19.707625   545 data_layer.cpp:104] Transform time: 6.177 ms.
+I0124 10:23:19.768595   545 data_layer.cpp:102] Prefetch batch: 6 ms.
+I0124 10:23:19.768615   545 data_layer.cpp:103]      Read time: 0.052 ms.
+I0124 10:23:19.768620   545 data_layer.cpp:104] Transform time: 6.186 ms.
+I0124 10:23:19.829771   545 data_layer.cpp:102] Prefetch batch: 6 ms.
+I0124 10:23:19.829789   545 data_layer.cpp:103]      Read time: 0.06 ms.
+I0124 10:23:19.829813   545 data_layer.cpp:104] Transform time: 6.422 ms.
+I0124 10:23:19.890923   545 data_layer.cpp:102] Prefetch batch: 6 ms.
+I0124 10:23:19.890944   545 data_layer.cpp:103]      Read time: 0.058 ms.
+I0124 10:23:19.890949   545 data_layer.cpp:104] Transform time: 6.449 ms.
+I0124 10:23:19.951867   545 data_layer.cpp:102] Prefetch batch: 6 ms.
+I0124 10:23:19.951886   545 data_layer.cpp:103]      Read time: 0.053 ms.
+I0124 10:23:19.951891   545 data_layer.cpp:104] Transform time: 6.342 ms.
+I0124 10:23:20.012984   545 data_layer.cpp:102] Prefetch batch: 6 ms.
+I0124 10:23:20.013003   545 data_layer.cpp:103]      Read time: 0.053 ms.
+I0124 10:23:20.013010   545 data_layer.cpp:104] Transform time: 6.456 ms.
+I0124 10:23:20.074174   545 data_layer.cpp:102] Prefetch batch: 6 ms.
+I0124 10:23:20.074193   545 data_layer.cpp:103]      Read time: 0.06 ms.
+I0124 10:23:20.074199   545 data_layer.cpp:104] Transform time: 6.465 ms.
+I0124 10:23:20.135179   545 data_layer.cpp:102] Prefetch batch: 6 ms.
+I0124 10:23:20.135200   545 data_layer.cpp:103]      Read time: 0.055 ms.
+I0124 10:23:20.135207   545 data_layer.cpp:104] Transform time: 6.448 ms.
+I0124 10:23:20.196197   545 data_layer.cpp:102] Prefetch batch: 6 ms.
+I0124 10:23:20.196218   545 data_layer.cpp:103]      Read time: 0.052 ms.
+I0124 10:23:20.196223   545 data_layer.cpp:104] Transform time: 6.384 ms.
+I0124 10:23:20.257603   545 data_layer.cpp:102] Prefetch batch: 6 ms.
+I0124 10:23:20.257624   545 data_layer.cpp:103]      Read time: 0.062 ms.
+I0124 10:23:20.257630   545 data_layer.cpp:104] Transform time: 6.626 ms.
+I0124 10:23:20.318410   545 data_layer.cpp:102] Prefetch batch: 6 ms.
+I0124 10:23:20.318428   545 data_layer.cpp:103]      Read time: 0.058 ms.
+I0124 10:23:20.318434   545 data_layer.cpp:104] Transform time: 6.424 ms.
+I0124 10:23:20.378867   545 data_layer.cpp:102] Prefetch batch: 6 ms.
+I0124 10:23:20.378886   545 data_layer.cpp:103]      Read time: 0.06 ms.
+I0124 10:23:20.378891   545 data_layer.cpp:104] Transform time: 6.38 ms.
+I0124 10:23:20.439987   545 data_layer.cpp:102] Prefetch batch: 6 ms.
+I0124 10:23:20.440006   545 data_layer.cpp:103]      Read time: 0.058 ms.
+I0124 10:23:20.440012   545 data_layer.cpp:104] Transform time: 6.405 ms.
+I0124 10:23:20.500970   545 data_layer.cpp:102] Prefetch batch: 6 ms.
+I0124 10:23:20.500990   545 data_layer.cpp:103]      Read time: 0.051 ms.
+I0124 10:23:20.500996   545 data_layer.cpp:104] Transform time: 6.418 ms.
+I0124 10:23:20.562058   545 data_layer.cpp:102] Prefetch batch: 6 ms.
+I0124 10:23:20.562078   545 data_layer.cpp:103]      Read time: 0.064 ms.
+I0124 10:23:20.562084   545 data_layer.cpp:104] Transform time: 6.444 ms.
+I0124 10:23:20.623189   545 data_layer.cpp:102] Prefetch batch: 6 ms.
+I0124 10:23:20.623211   545 data_layer.cpp:103]      Read time: 0.058 ms.
+I0124 10:23:20.623217   545 data_layer.cpp:104] Transform time: 6.434 ms.
+I0124 10:23:20.684048   545 data_layer.cpp:102] Prefetch batch: 6 ms.
+I0124 10:23:20.684067   545 data_layer.cpp:103]      Read time: 0.058 ms.
+I0124 10:23:20.684073   545 data_layer.cpp:104] Transform time: 6.35 ms.
+I0124 10:23:20.745419   545 data_layer.cpp:102] Prefetch batch: 6 ms.
+I0124 10:23:20.745437   545 data_layer.cpp:103]      Read time: 0.055 ms.
+I0124 10:23:20.745445   545 data_layer.cpp:104] Transform time: 6.65 ms.
+I0124 10:23:20.806514   545 data_layer.cpp:102] Prefetch batch: 6 ms.
+I0124 10:23:20.806535   545 data_layer.cpp:103]      Read time: 0.059 ms.
+I0124 10:23:20.806540   545 data_layer.cpp:104] Transform time: 6.612 ms.
+I0124 10:23:20.867313   545 data_layer.cpp:102] Prefetch batch: 6 ms.
+I0124 10:23:20.867333   545 data_layer.cpp:103]      Read time: 0.059 ms.
+I0124 10:23:20.867339   545 data_layer.cpp:104] Transform time: 6.431 ms.
+I0124 10:23:20.928300   545 data_layer.cpp:102] Prefetch batch: 6 ms.
+I0124 10:23:20.928320   545 data_layer.cpp:103]      Read time: 0.057 ms.
+I0124 10:23:20.928326   545 data_layer.cpp:104] Transform time: 6.42 ms.
+I0124 10:23:20.989634   545 data_layer.cpp:102] Prefetch batch: 6 ms.
+I0124 10:23:20.989670   545 data_layer.cpp:103]      Read time: 0.058 ms.
+I0124 10:23:20.989675   545 data_layer.cpp:104] Transform time: 6.625 ms.
+[New Thread 0x7fffd7329700 (LWP 542)]
+[New Thread 0x7fffce7ff700 (LWP 543)]
+[New Thread 0x7fffcdb9e700 (LWP 544)]
+[New Thread 0x7fffccdd1700 (LWP 545)]
+[New Thread 0x7fffae3f1700 (LWP 546)]
+[New Thread 0x7fffadbf0700 (LWP 547)]
+
+Program received signal SIGINT, Interrupt.
+0x00007ffff7ffa9ac in clock_gettime ()
+(gdb) 
